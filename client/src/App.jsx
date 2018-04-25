@@ -1,15 +1,31 @@
-import React from 'react';
-import styles from './styles.css';
+import React, { Component } from 'react';
+import Header from './Header.jsx';
+import Main from './Main.jsx'
+import sampleSources from '../../db/testData.js';
 
-class App extends React.Component {
+
+
+class App extends Component {
+  constructor(props) {
+  super(props);
+  this.state = {
+    articles: sampleSources.sampleArticles,
+    events: sampleSources.sampleEvents,
+    sources: sampleSources.sampleSources
+  }
+}
+
   render() {
     return (
       <div>
-        Eco-Chamber
+        <Header/> 
+        <Main state={this.state}/>
       </div> 
     )  
   }; 
 }
+
+
 
 
 export default App;

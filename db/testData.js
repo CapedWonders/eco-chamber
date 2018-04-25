@@ -211,11 +211,7 @@ const sampleArticles = [
   }
 ];
 
-module.exports = {
-  sampleEvents,
-  sampleSources,
-  sampleArticles
-}
+export default { sampleSources, sampleArticles, sampleEvents } ;
 
 
 
