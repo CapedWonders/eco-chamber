@@ -7,13 +7,13 @@
   },
   "produces": ["application/json"],
   "paths": {
-    "/categories": {
+    "/api/categories": {
       "get": {
         "tags": ["categories"],
         "responses": {}
       }
     },
-    "/events": {
+    "/api/events": {
       "get": {
         "tags": ["events"],
         "parameters": [
@@ -26,7 +26,7 @@
         "responses": {}
       }
     },
-    "/sources": {
+    "/api/sources": {
       "get": {
         "tags": ["sources"],
         "parameters": [
