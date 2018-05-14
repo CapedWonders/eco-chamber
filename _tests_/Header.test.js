@@ -1,21 +1,19 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { expect } from 'chai';
-import  Header  from '../client/src/Header.jsx';
-import Events from '../client/src/Events.jsx';
+import App from '../client/src/components/App.jsx';
+import Event from '../client/src/components/Event.jsx';
 
-
-describe('<Header/>', () => {
-  it('renders 1 component <Header /> ', () => {
-    const wrapper = shallow(<Header/>);
+describe('<App/>', () => {
+  it('renders 1 component <App/> ', () => {
+    const wrapper = shallow(<App/>);
     expect(wrapper.find('div')).to.have.lengthOf(1)
   });
 });
 
-describe('<Events/>', () => {
-  it('renders 1 component <Events /> ', () => {
-    const wrapper = shallow(<Events/>);
+describe('<Event/>', () => {
+  it('renders 1 component <Event/> ', () => {
+    const wrapper = shallow(<Event/>);
     expect(wrapper.find('div')).to.have.lengthOf(1)
   });
 });
-
