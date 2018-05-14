@@ -1,3 +1,6 @@
+.CategoryLink {
+  padding-left: 10px;
+}
 
 body {
   background-color: #F8F8F8
@@ -122,7 +125,6 @@ body {
   border-width: 1px
 }
 
-
 /* articles */
 
 .articles-container {
@@ -156,7 +158,6 @@ img {
   align-self: center;
 }
 
-
 /* sigin and signup component*/
 
 .signin {
@@ -170,18 +171,3 @@ img {
   border-style: solid;
   border-width: 3px
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
