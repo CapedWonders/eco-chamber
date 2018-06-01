@@ -124,7 +124,7 @@ class Event extends Component {
     return (
       <div>
         <div className="event-top">        
-          <WordMap className="word-map" data={this.state.weightedWords}/>    
+          <WordMap width="500" height="300"className="word-map" data={this.state.weightedWords}/>    
         </div>
 
         <div className="event-bottom">

@@ -10,6 +10,7 @@ import Signup from './Signup.jsx';
 import Signin from './Signin.jsx';
 import MyEvents from './MyEvents.jsx';
 import TopEvents from './TopEvents.jsx';
+import Gameboard from './Gameboard.jsx';
 
 class App extends Component {
   constructor(props) {
@@ -19,16 +20,19 @@ class App extends Component {
   render() {
     return ( 
       <div>
-        <Navbar/>
-        <Categories />
+        <div className="header">
+          <Navbar/>
+          <Categories/>
+        </div>
         <Switch>
-          <Route exact path='/' component={Home}/>
+          <Route exact path='/' component={TopEvents}/>
           <Route path="/category/:categoryId/events" component={Events}/>
           <Route path="/event/:eventId/articles" component={Event}/>
           <Route path="/signup" component={Signup}/>
           <Route path="/signin" component={Signin}/>
           <Route path="/myEvents" component={MyEvents}/>
           <Route path="/topEvents" component={TopEvents}/>
+          <Route path="/game" component={Gameboard}/>
         </Switch>
       </div>
     );

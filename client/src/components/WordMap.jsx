@@ -12,10 +12,10 @@ class EventWordCloud extends React.Component {
 
   render() {
     return (
-      <div style={{"width": "500", "height": "300", "margin": "auto"}}> 
+      <div> 
         <WordCloud
-          width={500}
-          height={300}
+          width={this.props.width}
+          height={this.props.height}
           data={this.props.data}
           fontSizeMapper={fontSizeMapper}
           padding={2}

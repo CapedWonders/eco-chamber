@@ -131,7 +131,42 @@ app.get('/api/topEvents', wrap(async (req, res) => {
   res.json(results);
 }));
 
-// events
+// top events with articles and sources included for game
+app.get('/api/gameEvents', wrap(async  (req, res) => {
+  // limit top events to ones created by our system in the last 5 days
+  const daysAgo = new Date(new Date() - (24*5) * 60 * 60 * 1000);
+
+  const events = await db.Event.findAll({
+    include: [{
+      model: db.Article,
+      include: db.Source
+    }],
+    where: {
+      createdAt: {
+        [Op.gt]: daysAgo
+      }
+    }
+  });
+
+  const countValidSources = articles => {
+    let sources = [];
+    for (const article of articles) {
+      if (!sources.includes(article.Source.uri)) {
+        sources.push(article.Source.uri);
+      }
+    }
+    return sources;
+  }
+
+  //only consider events that have associated articles and have been reported by at least 8 sources
+  let filteredBySources = events.filter(event => countValidSources(event.Articles).length > 7);
+
+  res.send(filteredBySources);
+
+
+}));
+
+// event sentiment
 app.get('/api/eventSentiment', wrap(async (req, res) => {
   const { eventId } = req.query;
   

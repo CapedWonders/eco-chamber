@@ -8,15 +8,12 @@ class EventDetail extends Component {
   }
 
   render() {
-    console.log(this.props.selected); 
-
-    return (  
-
+    return (
       <div className="event-detail">     
         <h1> Information about this event </h1>  
         <EventSentimentRadarChart eventId={this.props.eventId} />   
       </div>     
-    )
+    );
   }
 }
 

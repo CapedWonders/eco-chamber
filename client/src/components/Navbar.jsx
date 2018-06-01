@@ -1,75 +1,38 @@
-import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import Auth from '../helpers/Auth';
 
-class Navbar extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  onClick = () => {
-    Auth.deleteJWT();
-    this.props.history.push('/');
-  }
-
-  render() {
-    const liStyle = {
-      "textDecoration": "none",
-      "color": "white",
-      "cursor": "pointer",
-    }
-
-    const loggedInComponents = (
-      <ul className="nav-right">
-        <li>
-          <Link style={liStyle} to="/myEvents">
-            My Events
-          </Link>
-        </li>
-        <li>
-          <Link style={liStyle} to="/topEvents">
-            Top Events
-          </Link>
-        </li>
-        <li className="logout" onClick={this.onClick} style={liStyle}>Logout</li>
-      </ul>
-    );
-
-    const loggedOutComponents = (
-      <ul className="nav-right">
-        <li>
-          <Link style={liStyle} to="/signup">
-            Sign Up
-          </Link>  
-        </li>
-        <li>
-          <Link style={liStyle} to="/signin">
-            Log in
-          </Link>
-        </li>
-        <li>
-          <Link style={liStyle} to="/topEvents">
-            Top Events
-          </Link>
-        </li>
-      </ul>
-    );
-  
-    const authComponents = Auth.getJWT() ? loggedInComponents : loggedOutComponents;
-
-    return (
-      <nav className="navbar">  
-        <div className="navbar-container"> 
-          <Link to="/" className="title">
-            <h1>
-              Eco-Chamber
-            </h1>
-          </Link>
-          {authComponents}
-        </div>
-      </nav>
-    );
-  }
+const onClick = () => {
+  Auth.deleteJWT();
 };
 
-export default withRouter(Navbar);
+const Navbar = () => {
+  const loggedInComponents = (
+    <div className="nav-right">
+      <Link to="/topEvents">Top Events</Link>
+      <Link to="/myEvents">My Events</Link>
+      <Link to="/" onClick={onClick}>Logout</Link>
+    </div>
+  );
+
+  const loggedOutComponents = (
+    <div className="nav-right">
+      <Link to="/topEvents">Top Events</Link>
+      <Link to="/signup">Sign Up</Link>  
+      <Link to="/signin">Log in</Link>
+    </div>
+  );
+
+  const rightNavComponents = Auth.getJWT() ? loggedInComponents : loggedOutComponents;
+
+  return (
+    <div className="navbar"> 
+      <Link to="/" className="title">
+        <h1>Eco-Chamber</h1>
+      </Link>
+      {rightNavComponents}
+    </div>
+  );
+};
+
+export default Navbar;

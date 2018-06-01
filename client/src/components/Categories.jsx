@@ -8,25 +8,29 @@ class Categories extends Component {
     this.state = { 
       categories: [], 
     };
-  } 
+  }
 
   componentDidMount() {
-    Api.get('/categories').then(categories => this.setState({ categories }));
+    Api.get('/categories').then(categories => {
+      categories.sort((a, b) => {
+        return a.name.localeCompare(b.name);
+      });
+      this.setState({ categories });
+    });
   }
 
   render() {
     const categories = this.state.categories.map(({ id, name }) => {
       return (
-        <NavLink className= 'category' to={`/category/${id}/events`} activeClassName='selected-category'>{name}</NavLink>       
+        <NavLink to={`/category/${id}/events`} className="category" activeClassName="selected-category" key={id}>
+          {name}
+        </NavLink>       
       );
     });
-  
+
     return (
-      <div>
-        <div className="categories-container">
-          {categories}
-        </div>
-        <hr/>
+      <div className="categories">
+        {categories}
       </div>
     );
   }
