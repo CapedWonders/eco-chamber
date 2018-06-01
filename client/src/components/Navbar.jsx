@@ -9,6 +9,7 @@ const onClick = () => {
 const Navbar = () => {
   const loggedInComponents = (
     <div className="nav-right">
+      <Link to="/game">Play Game</Link>
       <Link to="/topEvents">Top Events</Link>
       <Link to="/myEvents">My Events</Link>
       <Link to="/" onClick={onClick}>Logout</Link>
@@ -17,11 +18,13 @@ const Navbar = () => {
 
   const loggedOutComponents = (
     <div className="nav-right">
+      <Link to="/game">Play Game</Link>
       <Link to="/topEvents">Top Events</Link>
       <Link to="/signup">Sign Up</Link>  
       <Link to="/signin">Log in</Link>
     </div>
   );
+
 
   const rightNavComponents = Auth.getJWT() ? loggedInComponents : loggedOutComponents;
 
