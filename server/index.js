@@ -86,6 +86,22 @@ app.get('/api/events', wrap(async (req, res) => {
   res.json(results);
 }));
 
+app.get('/api/events/search', wrap(async (req, res) => {
+  const { query } = req.query;
+  const queries = query
+    .split(' ')
+    .map(word => {
+      return { summary: { [Op.like]: `%${word}%` } }
+    });
+
+  const events = await db.Event.findAll({
+    where: { [Op.and]: queries },
+    order: [['date', 'DESC']],
+  });
+
+  res.json(events);
+}));
+
 //top events
 app.get('/api/topEvents', wrap(async (req, res) => {
   
@@ -127,7 +143,7 @@ app.get('/api/topEvents', wrap(async (req, res) => {
       date: x.date
     }
   });
-  
+
   res.json(results);
 }));
 
@@ -167,6 +183,7 @@ app.get('/api/gameEvents', wrap(async  (req, res) => {
 }));
 
 // event sentiment
+
 app.get('/api/eventSentiment', wrap(async (req, res) => {
   const { eventId } = req.query;
   

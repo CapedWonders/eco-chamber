@@ -26,6 +26,19 @@
         "responses": {}
       }
     },
+    "/api/events/search": {
+      "get": {
+        "tags": ["events"],
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
     "/api/topEvents": {
       "get": {
         "tags": ["topEvents"],
