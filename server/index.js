@@ -30,6 +30,9 @@ app.get('/api/categories', wrap(async (req, res) => {
 // events
 app.get('/api/events', wrap(async (req, res) => {
   const { categoryId } = req.query;
+  //only return events that have been reported on by the right and the left
+  const leftSources = ['motherjones.com', 'huffingtonpost.com', 'msnbc.com', 'nytimes.com', 'theguardian.com'];
+  const rightSources = ['breitbart.com', 'foxnews.com', 'ijr.com', 'theblaze.com', 'wnd.com', 'washingtontimesreporter.com'];
   
   // limit initial events to ones created by our system in the last 5 days
   const daysAgo = new Date(new Date() - (24*5) * 60 * 60 * 1000);
@@ -60,13 +63,26 @@ app.get('/api/events', wrap(async (req, res) => {
     return sources;
   }
 
+  const isBalanced = articles => {
+    let balanced = { right: 0, left:0}
+    for (const article of articles) {
+      if (leftSources.includes(article.Source.uri)) {
+        balanced.left ++;
+      } else if (rightSources.includes(article.Source.uri)) {
+        balanced.right++;
+      }
+    }
+    return balanced.right > 0 && balanced.left > 0;
+  }
+
   //only return events that have associated articles and have been reported by at least 4 sources
   let filteredByArticles = events.filter(event => event.Articles.length > 0);
   let filteredBySources = filteredByArticles.filter(event => countValidSources(event.Articles).length > 3);
+  let filteredBySpectrum = filteredBySources.filter(event => isBalanced(event.Articles));
 
 
   //sort results to come back newest first
-  const sorted = filteredBySources.sort((a, b) => {
+  const sorted = filteredBySpectrum.sort((a, b) => {
     a = new Date(a.date);
     b = new Date(b.date);
     return a>b ? -1 : a<b ? 1 : 0;
@@ -82,7 +98,7 @@ app.get('/api/events', wrap(async (req, res) => {
       date: x.date
     }
   });
-
+ 
   res.json(results);
 }));
 
@@ -117,8 +133,16 @@ app.get('/api/topEvents', wrap(async (req, res) => {
   //only consider events that have associated articles and have been reported by at least 8 sources
   let filteredBySources = events.filter(event => countValidSources(event.Articles).length > 7);
   
+
+  //sort results to come back newest first
+  const sorted = filteredBySources.sort((a, b) => {
+    a = new Date(a.date);
+    b = new Date(b.date);
+    return a>b ? -1 : a<b ? 1 : 0;
+  });
+
   //only send back the info client cares about
-  let results = filteredBySources.map(x => {
+  let results = sorted.map(x => {
     return {
       id: x.id,
       uri: x.uri,
@@ -126,8 +150,7 @@ app.get('/api/topEvents', wrap(async (req, res) => {
       summary: x.summary,
       date: x.date
     }
-  });
-  
+  }); 
   res.json(results);
 }));
 
@@ -162,8 +185,6 @@ app.get('/api/gameEvents', wrap(async  (req, res) => {
   let filteredBySources = events.filter(event => countValidSources(event.Articles).length > 7);
 
   res.send(filteredBySources);
-
-
 }));
 
 // event sentiment
@@ -224,9 +245,81 @@ app.get('/api/eventSentiment', wrap(async (req, res) => {
   };
 
   const result = calculateSentiment(event);
-
   res.json(result);
 }));
+
+//single-sided events - reported on by left only and right only
+app.get('/api/events/single-sided', wrap(async (req, res) => {
+  const sourceUris = {
+    left: ['motherjones.com', 'huffingtonpost.com', 'msnbc.com', 'nytimes.com', 'theguardian.com', 'latimes.com'],
+    right: ['ijr.com', 'theblaze.com', 'wnd.com', 'foxnews.com', 'breitbart.com', 'washingtontimesreporter.com']
+  }
+
+  // limit initial events to ones created by our system in the last 5 days
+  const daysAgo = new Date(new Date() - (24*5) * 60 * 60 * 1000);
+
+  const events = await db.Event.findAll({
+    include: [
+    {
+      model: db.Article,
+      include: [{
+        model: db.Source,
+      }]
+    }],
+    where: {
+      createdAt: {
+        [Op.gt]: daysAgo
+      }
+    }
+  });
+
+  //only return events that have at least 4 associated articles and have been reported on by requested bias
+  let filteredByArticles = events.filter(event => event.Articles.length > 3);
+  let results = {left:[], right:[]};
+
+  for (const event of events) {
+    if (event.Articles.length > 3) {
+      let right = event.Articles.filter(article => sourceUris.right.includes(article.Source.uri));
+      let left = event.Articles.filter(article => sourceUris.left.includes(article.Source.uri));
+
+      if (right.length === 0 && left.length > 0) {
+        results.left.push(event);
+      } else if (left.length === 0 & right.length > 0) {
+        results.right.push(event);
+      }
+    }
+  }
+
+  //sort results to come back newest first
+  results.right = results.right.sort((a, b) => {
+    a = new Date(a.date);
+    b = new Date(b.date);
+    return a>b ? -1 : a<b ? 1 : 0;
+  }).map(event => {
+    return {
+      id: event.id,
+      uri: event.uri,
+      title: event.title,
+      summary: event.summary,
+      date: event.date
+    }
+  });
+
+  results.left = results.left.sort((a, b) => {
+    a = new Date(a.date);
+    b = new Date(b.date);
+    return a>b ? -1 : a<b ? 1 : 0;
+  }).map(event => {
+    return {
+      id: event.id,
+      uri: event.uri,
+      title: event.title,
+      summary: event.summary,
+      date: event.date
+    }
+  });;
+  res.json(results);
+}))
 
 // sources, for a given event, returned in order of bias from far left to far right
 // includes Articles and Sentiments
@@ -256,12 +349,12 @@ app.get('/api/sources', wrap(async (req, res) => {
 
 // users
 app.post('/api/users', wrap(async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, bias } = req.body;
   const user = await db.User.findOne({ where: { email } });
   if (user) throw boom.badRequest('Email already exists');
 
   const hash = await bcrypt.hash(password, 10);
-  const newUser = await db.User.create({ email, password: hash });
+  const newUser = await db.User.create({ email, bias, password: hash });
   res.json(newUser);
 }));
 
@@ -304,6 +397,50 @@ app.delete('/api/users/user-events', exjwt({ secret: 'secret' }), wrap(async (re
   res.json(events);
 }));
 
+app.get('/api/users/user-ratings', exjwt({ secret: 'secret' }), wrap(async (req, res) => {
+  const userId = req.user.id;
+  const user = await db.User.findById(userId);
+  if (!user) throw boom.notFound(`Cannot find user with id: ${id}`);
+  const ratings = await db.Rating.findAll({
+    include: [{
+      model: db.User,
+      where: {
+        id: userId
+      }
+    }, 
+    {
+      model: db.Article,
+      include: db.Source
+    }]
+  });
+
+  const results = ratings.map(rating => {
+    return {
+      article: rating.Article,
+      source: rating.Article.Source,
+      informed: rating.informed,
+      articleBias: rating.articleBias,
+      titleBias: rating.titleBias,
+      sourceTrust: rating.sourceTrust
+    }
+  })
+
+  res.json(results);
+}));
+
+app.post('/api/users/user-ratings', exjwt({ secret: 'secret' }), wrap(async (req, res) => {
+  const userId = req.user.id;
+  const { informed, titleBias, articleBias, sourceTrust, articleId } = req.body;
+
+  const user = await db.User.findById(userId);
+  const article = await db.Article.findById(articleId);
+  const rating = await db.Rating.create({ informed, titleBias, articleBias, sourceTrust });
+
+  await article.addRating(rating);
+  await user.addRating(rating);
+  res.json(user);
+}));
+
 // auth
 app.get('/api/auth/login', wrap(async (req, res) => {
   const { email, password } = req.query;
@@ -323,7 +460,6 @@ app.get('/*', (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  console.log(err);
   if (err.isBoom) {
     const { payload } = err.output;
     res.status(payload.statusCode).json(payload);

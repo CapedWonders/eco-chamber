@@ -6,7 +6,7 @@ body {
 /* Header */
 .header {
   display: grid;
-  grid-template-rows: 80px 50px;
+  grid-template-rows: 1fr 50px;
 }
 
 /* Nav */
@@ -17,11 +17,71 @@ body {
 } 
 
 .title {
-  justify-self: start;
-  align-self: center;
-  padding-left: 25px;
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  grid-gap: 20px;
+  align-items: center;
+  padding-left: 40px;
   text-decoration: none;
   color: white;
+}
+
+.side-menu-icon {
+  align-self: center;
+}
+
+.sidebar {
+  margin-top: -50px;
+}
+
+.Collapsible__trigger {
+  margin-left: 5px;
+  margin-right: 5px;
+  display: block;
+  text-decoration: none;
+  position: relative;
+  border: 1px solid white;
+  padding: 20px;
+  background: #F8F8F8;
+}
+
+.Collapsible__contentInner {
+  background-color: #008080;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-menu {
+  padding-bottom: 5px;
+  position:absolute;
+  z-index: 10;
+  background-color: lightgrey;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+} 
+
+.sidebar-menu-item {
+  margin-left: 5px;
+  margin-right: 5px;
+  background-color: #F8F8F8;
+  color: black;
+  padding: 20px;
+  text-decoration: none;
+  border: 1px solid white;
+  font-size: 20;
+}
+
+.sidebar-event-item {
+  margin-left: 5px;
+  margin-right: 5px;
+  background-color: #F8F8F8;
+  color: black;
+  padding: 20px;
+  padding-left: 50px;
+  text-decoration: none;
+  border: 1px solid white;
+  font-size: 20;
 }
 
 .nav-right {
@@ -58,6 +118,20 @@ body {
   font-size: 20px;
 }
 
+/*Profile*/
+.profile {
+  margin-left: 150px;
+  margin-right: 150px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.ratings {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
 /* Events container */
 
 .events-container {
@@ -75,21 +149,32 @@ body {
 
 .events-container li {
   display: grid;
-  grid-template-columns: 1fr 3fr; 
-  grid-gap: 40px;
+  grid-template-rows: 1fr 50px; 
 }
 
 .li-header {
-  width: 400px;
+  min-width: 400px;
   height: 150px;
   background-color: #F8F8F8;
   padding: 30px;
   text-align: justify;
 }
 
-.event-list-item-right {
-  display: flex;
-  flex-direction: column;
+.event-item-top a {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  grid-gap: 10px;
+  align-items: start;
+}
+
+.event-item-bottom {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+}
+
+.event-card-date {
+  justify-self: start;
+  margin-left: 20px;
 }
 
 .event-text {
@@ -107,21 +192,30 @@ body {
 .event-icons {
   display: flex;
   flex-direction: row;
- /* align-items: flex-end;*/
   font-size: 50px;
   justify-content: flex-end;
   color: #008080;
 }
 
 .event-chart-icon {
-  margin-right: 40px;
+  margin-top: 0;
+  margin-right: 30px;
 }
 
 .event-star-icon {
-  margin-right: 40px;
+  margin-top: 0;
+  margin-right: 30px;
 }
 
+.toggle-bias {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
 
+.selected-bias {
+  background-color: lightgrey;
+}
 
 /* articles */
 
@@ -193,6 +287,11 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   justify-content: center;
+}
+
+.article-rating {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 /* The Close Button */
@@ -280,7 +379,7 @@ body {
   display: grid;
   align-items: center;
   justify-content: start;
-  grid-template-columns: 1fr 10fr;
+  grid-template-columns: 75px 1fr;
   text-align: center;
 }
 
@@ -296,27 +395,47 @@ body {
 .game-bias {
   display: grid;
   grid-gap: 20px;
-  justify-content: center;
+  justify-items: center;
+  margin-top: 50px;
 }
 
 .game-bias img {
-  height: 40px;
-  width: 40px;
+  height: 50px;
+  width: 50px;
+  padding: 5px;
 }
 
 .game-article {
   display: grid;
-  grid-template-rows: 1fr 1fr 2fr;
-  border: 1px solid lightgrey;
-  padding: 20px;
   height: 300px;
-  width: 450px;
+  width: 100%;
   border-radius: 5px;
   font-size: 20px;
   text-align: center;
-  justify-content: start;
-  align-items: start;
-  margin-top: 50px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  border: 1px solid lightgrey;
+}
+
+.game-article-title {
+  margin: 20px;
+  background-color: #F8F8F8;
+  padding: 20px;
+  font-size: 30px;
+  font-weight: bold;
+  border: solid 2px #008080;
+}
+
+.game-results-col button {
+  align-self: center;
+  margin-top: 30px;
+}
+
+#try-again {
+  font-size: 30px;
+  align-self: center;
+  justify-self: center;
 }
 
 svg {
@@ -333,27 +452,32 @@ select {
 }
 
 .game-results {
-  display: grid;
+  
   height: 300px;
-  width: 450px;
-  border: 1px solid lightgrey;
-  border-radius: 5px;
+  width: 100%;
 }
 
 .correct {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-around;
 }
 
 .left, .right, .center {
+  display:flex;
+  flex-direction: column;
   border: 1px solid lightgrey;
   border-radius: 5px;
   padding: 10px;
   font-size: 30px;
   font-weight: bold;
   text-align: center;
-  min-width: 300px;
+  width: 350px;
+}
+
+.left:hover, .center:hover, .right:hover {
+  background-color: #F8F8F8;
+  cursor: pointer;
 }
 
 .left {
@@ -368,8 +492,9 @@ select {
   color: red;
 }
 
-.source-image {
-  display: grid;
+.info-circle {
+  margin:0;
+  justify-self:end;
 }
 
 .loading {
@@ -431,7 +556,7 @@ button:hover {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   /*margin-bottom: 10px;*/
 }
 
@@ -447,6 +572,53 @@ button:hover {
   display:none;
 }
 
+/*About page*/
+.about-page {
+  text-align: center;
+  padding-right: 200px;
+  padding-left: 200px;
+  /*background-color: pink;*/
+}
+
+.about-page h1 {
+  color: #008080;
+  margin: 50px;
+}
+
+.about, .mission, .faq, .creators, .partners {
+  border-bottom: solid 1px lightgrey;
+  padding-bottom: 50px;
+}
+
+.mission .statements, .faq .questions  {
+  display: grid;
+  grid-gap: 50px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+.statement-icon {
+  font-size: 60px;
+  color: lightgrey;
+  margin-top: 0;
+}
+
+.question {
+  display: grid;
+}
+
+.creators .bios {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.bios img {
+  border: 2px solid lightgrey;
+}
+
+.footer {
+  background-color: grey;
+}
 
 /* sigin and signup component*/
 
@@ -514,16 +686,19 @@ hr {
 
 /* Add a blue text color to links */
 a {
-    color: dodgerblue;
+  color: dodgerblue;
 }
 
 /* Set a grey background color and center the text of the "sign in" section */
 .signin {
-    background-color: #f1f1f1;
-    text-align: center;
+  background-color: #f1f1f1;
+  text-align: center;
 }
 
-
+.register-page {
+  margin: 50px auto;
+  max-width: 600px;
+}
 
 /* sign in */
 

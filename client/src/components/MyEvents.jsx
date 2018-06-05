@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Api from '../helpers/Api';
+import EventList from './EventList.jsx';
 
 class MyEvents extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      events: [],
+      savedEvents: [],
       hoverIndex: -1,
+      selected: null
     };
   }
 
   componentDidMount() {
-    Api.get('/users/user-events').then(events => {
-      this.setState({ events });
+    Api.get('/users/user-events').then(savedEvents => {
+      this.setState({ savedEvents });
     });
   }
 
@@ -25,33 +27,38 @@ class MyEvents extends Component {
     this.setState({ hoverIndex: -1 });
   }
 
-  onClick = (e, eventId) => {
-    Api.delete('/users/user-events', { eventId }).then(events => {
-      this.setState({ events });
+  removeSaved = (e, eventId) => {
+    Api.delete('/users/user-events', { eventId }).then(savedEvents => {
+      this.setState({ savedEvents });
     });
   }
 
+  closeModal = () => {
+    this.setState({ selected: null});
+  }
+
+  showModal = (id) => {
+    this.setState({ selected: id});
+  }
+
   render() {
-    const events = this.state.events.map(({ id, title, date }, i) => {
-      const deleteButton = this.state.hoverIndex === i
-        ? <button onClick={(e) => { this.onClick(e, id) }} style={{ "height":"16px", "width":"50px" }}>delete</button>
-        : null;
+    const show = this.state.savedEvents.length === 0 
+      ? (<ul className="events-container"><h1>No Saved Events</h1></ul>)
+      : (
+          <ul className="events-container">
+            <h1> My Saved Events </h1>
+              <EventList 
+                selected={this.state.selected}
+                open={this.showModal} 
+                close= {this.closeModal} 
+                remove={this.removeSaved} 
+                saved={this.state.savedEvents} 
+                events={this.state.savedEvents} 
+              />
+          </ul>
+        );
 
-      return (
-        <li key={id} onMouseEnter={(e) => { this.onMouseEnter(e, i) }} onMouseLeave={(e) => { this.onMouseLeave(e, i) }}>
-          <Link to={`/event/${id}/articles`} style={{ "color": "black" }}>
-            {title}
-          </Link>
-          {deleteButton}
-        </li>
-      );
-    });
-
-    return (
-      <ul>
-        {events}
-      </ul>
-    );
+    return show;
   }
 };
 

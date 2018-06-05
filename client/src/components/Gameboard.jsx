@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import Api from '../helpers/Api';
 import WordMap from './WordMap.jsx';
+import BarChart from './BarChart.jsx';
 import analyzeArticleTitles from '../helpers/WordMap.js';
+import formatDataForGameResults from '../helpers/BarChart.js';
 
 class Gameboard extends Component {
   constructor(props) {
@@ -42,6 +44,7 @@ class Gameboard extends Component {
     this.finishedGame = this.finishedGame.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeArticle = this.handleChangeArticle.bind(this);
+    this.resetScore = this.resetScore.bind(this);
   }
 
  componentDidMount() {
@@ -68,11 +71,12 @@ class Gameboard extends Component {
   }
 
   setEvent(eventId) {
+    let previous = this.state.selectedEvent.id;
     let event = this.state.events.filter(event => event.id === eventId)[0];
    
     let score = { left: {correct:0, incorrect:0}, right: {correct:0, incorrect: 0}, center: {correct: 0, incorrect: 0}};
     this.setState({ correct: null, finished: false, selectedEvent: event, score, eventId: event.id }, () =>  {
-      this.getWordMapData(event.Articles);
+      this.getWordMapData(event.Articles);  
       this.setArticles("all");
       this.setSources();
     });
@@ -87,6 +91,11 @@ class Gameboard extends Component {
     }
     this.setState({ sources: sources });
   }
+  
+  resetScore() {
+    let score = { left: {correct:0, incorrect:0}, right: {correct:0, incorrect: 0}, center: {correct: 0, incorrect: 0}};
+    this.setState({ score, finished: false, correct: null, articleIndex: 0 });
+  }
 
   setArticles(numArticles) {
     let event = this.state.selectedEvent;
@@ -95,6 +104,7 @@ class Gameboard extends Component {
       articles = articles.slice(0, parseInt(numArticles));
     }
     this.setState({ articles, selectedArticle: articles[0] }); 
+    this.resetScore();
   }
 
   getWordMapData(articles) {
@@ -165,15 +175,17 @@ class Gameboard extends Component {
       : this.state.correct === false ? (<div id="try-again">Try Again</div>)
       : (<div></div>)
 
-     const finished = this.state.finished 
+    const finished = this.state.finished 
       ? (<div className="game-results">
-          <h1>YOU ARE FINISHED! Data on your score here</h1>
+          <BarChart data={formatDataForGameResults(this.state.score)} width="200" height="100"/>
         </div>)
-      : (<div className="game-article">
-          {this.state.selectedArticle.title}
-          <button onClick={this.newArticle}>Next Article</button>  
-          {correct}
-        </div>) 
+      : (<div>
+          <div className="game-article">
+            {correct}
+          </div>
+            <p className="remaining">{this.state.articles.length - this.state.articleIndex} articles remaining</p> 
+            <button onClick={this.newArticle}>Next Article</button> 
+        </div>)
 
     return this.state.events.length === 0 
       ? (<div className="loading"><div className="loading-spinner"></div></div>) 
@@ -193,10 +205,7 @@ class Gameboard extends Component {
                   {eventOptions}
                 </select>               
               </form>
-              <WordMap width="450" height="300" className="word-map" data={this.state.weightedWords}/> 
-            </div>
-
-            <div className="game-article-col">
+              <WordMap size="20" width="350" height="200" className="word-map" data={this.state.weightedWords}/> 
               <div className="game-title">
                 <h1 className="game-number">2</h1>
                 <h3>SELECT NUMBER OF ARTICLES</h3>
@@ -209,34 +218,37 @@ class Gameboard extends Component {
                   <option value="15">15 articles</option>                                         
                 </select>                 
               </form> 
-              {finished}                   
             </div>
-                        
-            <div className="game-bias">
+
+            <div className="game-bias-col">
               <div className="game-title">
                 <h1 className="game-number">3</h1>
                 <h3>GUESS SPECTRUM</h3>
               </div>
-              <div onClick={() => this.calculateBias('right')} className="right">
-                RIGHT
-                <div className="source-image">
-                  {rightSources}
+              <div className="game-article-title">{this.state.selectedArticle.title}</div>
+
+              <div className="game-bias">
+                <div onClick={() => this.calculateBias('right')} className="right">
+                  RIGHT
                 </div>
+                <div onClick={() => this.calculateBias('center')} className="center">
+                  CENTER
+                </div>
+                <div onClick={() => this.calculateBias('left')} className="left">
+                  LEFT
+                </div>               
               </div>
-              <div onClick={() => this.calculateBias('center')} className="center">
-                CENTER
-                <div className="source-image">
-                  {centerSources}
-                </div>
-              </div>
-              <div onClick={() => this.calculateBias('left')} className="left">
-                LEFT
-                <div className="source-image">
-                  {leftSources}
-                </div>
-              </div>               
+            </div> 
+
+             <div className="game-results-col">
+               <div className="game-title">
+                 <h1 className="game-number">4</h1>
+                 <h3>VIEW RESULTS</h3>
+               </div>
+              {finished}        
+            </div>                  
             </div>
-          </div>
+            
         </div>          
       )  
   }
