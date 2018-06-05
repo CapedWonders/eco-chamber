@@ -10,11 +10,11 @@ class Source extends Component {
   }
 
   render() {
-   
     const { title } = this.props.source;
     const { image } = this.props.source;
 
     return (
+
       <div className={this.props.show ? "showSource" : "hideSource"}>
         <div className="source-image">       
             <FaCaretLeft onClick={(e) => this.props.toggle(e, 'left')} className="fa-caret-left"/>
@@ -24,7 +24,7 @@ class Source extends Component {
         <div className="source-title">       
           <h2>{title}</h2>
         </div>
-        <ArticleList selected={this.props.selected} toggleArticle={this.props.toggleArticle} articles={this.props.articles}/> 
+        <ArticleList getRatings={this.props.getRatings} ratings={this.props.ratings} selected={this.props.selected} toggleArticle={this.props.toggleArticle} articles={this.props.articles}/> 
       </div>
     );
   }

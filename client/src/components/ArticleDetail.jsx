@@ -11,7 +11,7 @@ class ArticleDetail extends Component {
       informed: '',
       titleBias: '',
       articleBias: '',
-      sourceTrust: ''
+      sourceTrust: '',
     }
   }
 
@@ -36,10 +36,129 @@ class ArticleDetail extends Component {
   saveRating = (articleId) => {
     const { informed, titleBias, articleBias, sourceTrust } = this.state;
     Api.post('/users/user-ratings', { informed, titleBias, articleBias, sourceTrust, articleId })
-       .then(res => this.setState({ informed: '', titleBias: '', articleBias: '', sourceTrust: ''}));    
+       .then(res => {
+          this.setState({ informed: '', titleBias: '', articleBias: '', sourceTrust: ''});
+          this.props.getRatings();
+      });    
   }
 
   render() {
+    const form = this.props.rated ? <div><h3>You have already rated this article</h3></div> :
+      <div className="article-rating">
+        <form>
+          <div className="radio">
+            <p>I am more informed after reading this article</p>
+            <label>
+              <input name="informed" type="radio" value={-1}
+                     checked={this.state.informed === -1} 
+                     onChange={this.handleOptionChange}/>
+              No
+            </label>
+          </div>
+          <div className="radio">
+            <label>
+              <input name="informed" type="radio" value={0} 
+                     checked={this.state.informed === 0} 
+                     onChange={this.handleOptionChange} />
+              Somewhat
+            </label>
+          </div>
+          <div className="radio">
+            <label>
+              <input name="informed" type="radio" value={1} 
+                     checked={this.state.informed === 1} 
+                     onChange={this.handleOptionChange} />
+              Yes
+            </label>
+          </div>
+        </form>
+
+        <form>
+          <div className="radio">
+            <p>How biased is this article title?</p>
+            <label>
+              <input name="titleBias" type="radio" value={-1}
+                     checked={this.state.titleBias === -1} 
+                     onChange={this.handleOptionChange}/>
+              Not biased
+            </label>
+          </div>
+          <div className="radio">
+            <label>
+              <input name="titleBias" type="radio" value={0}
+                     checked={this.state.titleBias === 0} 
+                     onChange={this.handleOptionChange} />
+              Somewhat biased
+            </label>
+          </div>
+          <div className="radio">
+            <label>
+              <input name="titleBias" type="radio" value={1} 
+                     checked={this.state.titleBias === 1} 
+                     onChange={this.handleOptionChange} />
+              Very biased
+            </label>
+          </div>
+        </form>
+
+        <form>
+          <div className="radio">
+            <p>How biased is this article?</p>
+            <label>
+              <input name="articleBias" type="radio" value={-1}
+                     checked={this.state.articleBias === -1} 
+                     onChange={this.handleOptionChange}/>
+              Not biased
+            </label>
+          </div>
+          <div className="radio">
+            <label>
+              <input name="articleBias" type="radio" value={0}
+                     checked={this.state.articleBias === 0} 
+                     onChange={this.handleOptionChange} />
+              Somewhat biased
+            </label>
+          </div>
+          <div className="radio">
+            <label>
+              <input name="articleBias" type="radio" value={1} 
+                     checked={this.state.articleBias === 1} 
+                     onChange={this.handleOptionChange} />
+              Very biased
+            </label>
+          </div>
+        </form>
+
+        <form>
+          <div className="radio">
+            <p>After reading this article, how much do you trust its source?</p>
+            <label>
+              <input name="sourceTrust" type="radio" value={-1}
+                     checked={this.state.sourceTrust === -1} 
+                     onChange={this.handleOptionChange}/>
+              Less
+            </label>
+          </div>
+          <div className="radio">
+            <label>
+              <input name="sourceTrust" type="radio" value={0} 
+                     checked={this.state.sourceTrust === 0} 
+                     onChange={this.handleOptionChange} />
+              The same
+            </label>
+          </div>
+          <div className="radio">
+            <label>
+              <input name="sourceTrust" type="radio" value={1} 
+                     checked={this.state.sourceTrust === 1} 
+                     onChange={this.handleOptionChange} />
+              More
+            </label>
+          </div>
+        </form>
+        <button onClick={this.handleSubmit}>Sumbit Review</button>  
+      </div>   
+             
 
     const Sentiments = this.props.article.Sentiments;
 
@@ -56,129 +175,15 @@ class ArticleDetail extends Component {
             <a href={this.props.article.url} target="_blank"><h2>{this.props.article.title}</h2></a>
             <div className="article-date">
               <p>{moment(this.props.article.date).fromNow()}</p>
-            </div>   
-            <div className="article-rating">
-              <form>
-                <div className="radio">
-                  <p>I am more informed after reading this article</p>
-                  <label>
-                    <input name="informed" type="radio" value={-1}
-                           checked={this.state.informed === -1} 
-                           onChange={this.handleOptionChange}/>
-                    No
-                  </label>
-                </div>
-                <div className="radio">
-                  <label>
-                    <input name="informed" type="radio" value={0} 
-                           checked={this.state.informed === 0} 
-                           onChange={this.handleOptionChange} />
-                    Somewhat
-                  </label>
-                </div>
-                <div className="radio">
-                  <label>
-                    <input name="informed" type="radio" value={1} 
-                           checked={this.state.informed === 1} 
-                           onChange={this.handleOptionChange} />
-                    Yes
-                  </label>
-                </div>
-              </form>
-
-              <form>
-                <div className="radio">
-                  <p>How biased is this article title?</p>
-                  <label>
-                    <input name="titleBias" type="radio" value={-1}
-                           checked={this.state.titleBias === -1} 
-                           onChange={this.handleOptionChange}/>
-                    Not biased
-                  </label>
-                </div>
-                <div className="radio">
-                  <label>
-                    <input name="titleBias" type="radio" value={0}
-                           checked={this.state.titleBias === 0} 
-                           onChange={this.handleOptionChange} />
-                    Somewhat biased
-                  </label>
-                </div>
-                <div className="radio">
-                  <label>
-                    <input name="titleBias" type="radio" value={1} 
-                           checked={this.state.titleBias === 1} 
-                           onChange={this.handleOptionChange} />
-                    Very biased
-                  </label>
-                </div>
-              </form>
-
-              <form>
-                <div className="radio">
-                  <p>How biased is this article?</p>
-                  <label>
-                    <input name="articleBias" type="radio" value={-1}
-                           checked={this.state.articleBias === -1} 
-                           onChange={this.handleOptionChange}/>
-                    Not biased
-                  </label>
-                </div>
-                <div className="radio">
-                  <label>
-                    <input name="articleBias" type="radio" value={0}
-                           checked={this.state.articleBias === 0} 
-                           onChange={this.handleOptionChange} />
-                    Somewhat biased
-                  </label>
-                </div>
-                <div className="radio">
-                  <label>
-                    <input name="articleBias" type="radio" value={1} 
-                           checked={this.state.articleBias === 1} 
-                           onChange={this.handleOptionChange} />
-                    Very biased
-                  </label>
-                </div>
-              </form>
-
-              <form>
-                <div className="radio">
-                  <p>After reading this article, how much do you trust its source?</p>
-                  <label>
-                    <input name="sourceTrust" type="radio" value={-1}
-                           checked={this.state.sourceTrust === -1} 
-                           onChange={this.handleOptionChange}/>
-                    Less
-                  </label>
-                </div>
-                <div className="radio">
-                  <label>
-                    <input name="sourceTrust" type="radio" value={0} 
-                           checked={this.state.sourceTrust === 0} 
-                           onChange={this.handleOptionChange} />
-                    The same
-                  </label>
-                </div>
-                <div className="radio">
-                  <label>
-                    <input name="sourceTrust" type="radio" value={1} 
-                           checked={this.state.sourceTrust === 1} 
-                           onChange={this.handleOptionChange} />
-                    More
-                  </label>
-                </div>
-              </form>
-            </div>   
-            <button onClick={this.handleSubmit}>Sumbit Review</button>       
+            </div>  
           </div>
-          {chart}
-        </div>
-
+          {chart}         
+        </div>    
+        
         <div className="article-body">
           <p>{this.props.article.body}</p>
+          {form}
         </div>
-
       </div>     
     )
   }

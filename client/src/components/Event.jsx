@@ -7,6 +7,7 @@ import CompareArticles from './CompareArticles.jsx';
 import moment from 'moment';
 import WordMap from './WordMap.jsx';
 import analyzeArticleTitles from '../helpers/WordMap.js';
+import Auth from '../helpers/Auth.js';
 
 class Event extends Component {
   constructor(props) {
@@ -18,6 +19,7 @@ class Event extends Component {
       weightedWords: [],
       selectedArticles: [],
       showModal: false,
+      ratings:[]
     };
 
     this.toggleSelectedArticle = this.toggleSelectedArticle.bind(this);
@@ -33,8 +35,17 @@ class Event extends Component {
       this.orderSources(sources);
       this.getAllArticles(sources);
       this.getWordMapData(this.state.articles);   
+      this.getSavedRatings();
     }); 
+
   } 
+
+  getSavedRatings = () => {
+    let jwt = Auth.getJWT();
+    if (jwt) {
+      Api.get('/users/user-ratings').then(ratings => this.setState({ ratings }));
+    }   
+  }
 
   getAllArticles(allSources) {
     let allArticles = [];
@@ -111,7 +122,7 @@ class Event extends Component {
     const sources = this.state.orderedSources.map(x => {
       return (
         <li key={x[0].bias}>
-          <Sources selected={this.state.selectedArticles} toggleArticle={this.toggleSelectedArticle} sources={x}/>
+          <Sources getRatings={this.getSavedRatings} ratings={this.state.ratings} selected={this.state.selectedArticles} toggleArticle={this.toggleSelectedArticle} sources={x}/>
         </li>
       )
     });

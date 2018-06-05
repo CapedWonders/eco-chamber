@@ -29,14 +29,16 @@ class Article extends Component {
   }
 
   render() {
+
     let isSelected = this.props.selected.filter(x=> x.id === this.props.article.id).length > 0;
+    let isRated = this.props.ratings.filter(rating => rating.article.id === this.props.article.id).length > 0;
 
     return ( 
       <div>
         <div className="modal" style={{ display: this.state.showModal ? 'block' : 'none' }}>
           <div className="modal-content">
             <FaClose style={{"color":"darkgrey", "fontSize": 60}}onClick={this.closeModal}/>
-            <ArticleDetail article={this.props.article}/>
+            <ArticleDetail getRatings={this.props.getRatings} rated={isRated} article={this.props.article}/>
           </div>
         </div>
 

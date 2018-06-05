@@ -294,6 +294,11 @@ body {
   grid-template-columns: 1fr 1fr;
 }
 
+.article-body {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+}
+
 /* The Close Button */
 .close {
     color: #aaa;
