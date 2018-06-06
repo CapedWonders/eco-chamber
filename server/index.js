@@ -1,5 +1,6 @@
 const db = require('../models/index');
 const Op = db.Sequelize.Op;
+const helpers = require('../utils/dbHelpers.js');
 
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
@@ -27,69 +28,13 @@ app.get('/api/categories', wrap(async (req, res) => {
   res.json(categories);
 }));
 
-// events
+// events by category
 app.get('/api/events', wrap(async (req, res) => {
   const { categoryId } = req.query;
-  //only return events that have been reported on by the right and the left
-  const leftSources = ['motherjones.com', 'huffingtonpost.com', 'msnbc.com', 'nytimes.com', 'theguardian.com'];
-  const rightSources = ['breitbart.com', 'foxnews.com', 'ijr.com', 'theblaze.com', 'wnd.com', 'washingtontimesreporter.com'];
-  
-  // limit initial events to ones created by our system in the last 5 days
-  const daysAgo = new Date(new Date() - (24*5) * 60 * 60 * 1000);
-
-  const events = await db.Event.findAll({
-    include: [{
-      model: db.Subcategory,
-      where: { categoryId }
-    },
-    {
-      model: db.Article,
-      include: db.Source
-    }],
-    where: {
-      createdAt: {
-        [Op.gt]: daysAgo
-      }
-    }
-  });
-
-  const countValidSources = articles => {
-    let sources = [];
-    for (const article of articles) {
-      if (!sources.includes(article.Source.uri)) {
-        sources.push(article.Source.uri);
-      }
-    }
-    return sources;
-  }
-
-  const isBalanced = articles => {
-    let balanced = { right: 0, left:0}
-    for (const article of articles) {
-      if (leftSources.includes(article.Source.uri)) {
-        balanced.left ++;
-      } else if (rightSources.includes(article.Source.uri)) {
-        balanced.right++;
-      }
-    }
-    return balanced.right > 0 && balanced.left > 0;
-  }
-
-  //only return events that have associated articles and have been reported by at least 4 sources
-  let filteredByArticles = events.filter(event => event.Articles.length > 0);
-  let filteredBySources = filteredByArticles.filter(event => countValidSources(event.Articles).length > 3);
-  let filteredBySpectrum = filteredBySources.filter(event => isBalanced(event.Articles));
-
-
-  //sort results to come back newest first
-  const sorted = filteredBySpectrum.sort((a, b) => {
-    a = new Date(a.date);
-    b = new Date(b.date);
-    return a>b ? -1 : a<b ? 1 : 0;
-  });
+  const events = await helpers.getBalancedEvents(categoryId, 5);
 
   //only send back the info client cares about
-  let results = sorted.map(x => {
+  let results = events.map(x => {
     return {
       id: x.id,
       uri: x.uri,
@@ -98,7 +43,6 @@ app.get('/api/events', wrap(async (req, res) => {
       date: x.date
     }
   });
- 
   res.json(results);
 }));
 
@@ -106,43 +50,10 @@ app.get('/api/events', wrap(async (req, res) => {
 app.get('/api/topEvents', wrap(async (req, res) => {
   
   // limit top events to ones created by our system in the last 5 days
-  const daysAgo = new Date(new Date() - (24*5) * 60 * 60 * 1000);
-
-  const events = await db.Event.findAll({
-    include: [{
-      model: db.Article,
-      include: db.Source
-    }],
-    where: {
-      createdAt: {
-        [Op.gt]: daysAgo
-      }
-    }
-  });
-
-  const countValidSources = articles => {
-    let sources = [];
-    for (const article of articles) {
-      if (!sources.includes(article.Source.uri)) {
-        sources.push(article.Source.uri);
-      }
-    }
-    return sources;
-  }
-
-  //only consider events that have associated articles and have been reported by at least 8 sources
-  let filteredBySources = events.filter(event => countValidSources(event.Articles).length > 7);
-  
-
-  //sort results to come back newest first
-  const sorted = filteredBySources.sort((a, b) => {
-    a = new Date(a.date);
-    b = new Date(b.date);
-    return a>b ? -1 : a<b ? 1 : 0;
-  });
+  const events = await helpers.getTopEvents(5)
 
   //only send back the info client cares about
-  let results = sorted.map(x => {
+  let results = events.map(x => {
     return {
       id: x.id,
       uri: x.uri,
@@ -157,145 +68,23 @@ app.get('/api/topEvents', wrap(async (req, res) => {
 // top events with articles and sources included for game
 app.get('/api/gameEvents', wrap(async  (req, res) => {
   // limit top events to ones created by our system in the last 5 days
-  const daysAgo = new Date(new Date() - (24*5) * 60 * 60 * 1000);
-
-  const events = await db.Event.findAll({
-    include: [{
-      model: db.Article,
-      include: db.Source
-    }],
-    where: {
-      createdAt: {
-        [Op.gt]: daysAgo
-      }
-    }
-  });
-
-  const countValidSources = articles => {
-    let sources = [];
-    for (const article of articles) {
-      if (!sources.includes(article.Source.uri)) {
-        sources.push(article.Source.uri);
-      }
-    }
-    return sources;
-  }
-
-  //only consider events that have associated articles and have been reported by at least 8 sources
-  let filteredBySources = events.filter(event => countValidSources(event.Articles).length > 7);
-
-  res.send(filteredBySources);
+  const events = await helpers.getTopEvents(5);
+  res.json(events);
 }));
 
 // event sentiment
 app.get('/api/eventSentiment', wrap(async (req, res) => {
   const { eventId } = req.query;
-  
-  const event = await db.Event.find({
-    include: [
-    {
-      model: db.Article,
-      include: [db.Source, db.Sentiment]
-    }],
-    where: { id: eventId }
-  });
-
-  const averageSentiment = sentiments => {
-    let totals = {};
-    let numSentiments = 0;
-    for (const sentiment of sentiments) {
-      for (const item of sentiment) {
-        numSentiments += 1;
-        totals['sentiment'] = totals['sentiment'] ? totals['sentiment'] += item.sentiment : item.sentiment;
-        totals['fear'] = totals['fear'] ? totals['fear'] += item.fear : item.fear;
-        totals['disgust'] = totals['disgust'] ? totals['disgust'] += item.disgust : item.disgust;
-        totals['anger'] = totals['anger'] ? totals['anger'] += item.anger : item.anger;
-        totals['joy'] = totals['joy'] ? totals['joy'] += item.joy : item.joy;
-        totals['sadness'] = totals['sadness'] ? totals['sadness'] += item.sadness : item.sadness;
-      } 
-    }
-    //average all values
-    for (let  item in totals) {
-      totals[item] = totals[item] / numSentiments;
-    }
-
-    return totals;
-  }
-
-  const calculateSentiment = event => {
-    const leftSources = ['motherjones.com', 'huffingtonpost.com', 'msnbc.com', 'nytimes.com', 'theguardian.com'];
-    const rightSources = ['breitbart.com', 'foxnews.com', 'ijr.com', 'theblaze.com', 'wnd.com', 'washingtontimesreporter.com'];
-    const centerSources = ['hosted.ap.org', 'npr.org', 'thehill.com'];
-
-    const leftArticles = event.Articles.filter(article => leftSources.includes(article.Source.uri));
-    const rightArticles = event.Articles.filter(article => rightSources.includes(article.Source.uri));
-    const centerArticles = event.Articles.filter(article => centerSources.includes(article.Source.uri));
-
-    const leftSentiments = leftArticles.map(article => article.Sentiments);
-    const rightSentiments = rightArticles.map(article => article.Sentiments);
-    const centerSentiments = centerArticles.map(article => article.Sentiments);
-
-    const result = {
-      left: averageSentiment(leftSentiments),
-      right: averageSentiment(rightSentiments),
-      center: averageSentiment(centerSentiments)
-    }
-
-    return result
-  };
-
-  const result = calculateSentiment(event);
+  const result = await helpers.getEventSentiment(eventId);
   res.json(result);
 }));
 
 //single-sided events - reported on by left only and right only
 app.get('/api/events/single-sided', wrap(async (req, res) => {
-  const sourceUris = {
-    left: ['motherjones.com', 'huffingtonpost.com', 'msnbc.com', 'nytimes.com', 'theguardian.com', 'latimes.com'],
-    right: ['ijr.com', 'theblaze.com', 'wnd.com', 'foxnews.com', 'breitbart.com', 'washingtontimesreporter.com']
-  }
+  let results = await helpers.getBiasedEvents(5);
 
-  // limit initial events to ones created by our system in the last 5 days
-  const daysAgo = new Date(new Date() - (24*5) * 60 * 60 * 1000);
-
-  const events = await db.Event.findAll({
-    include: [
-    {
-      model: db.Article,
-      include: [{
-        model: db.Source,
-      }]
-    }],
-    where: {
-      createdAt: {
-        [Op.gt]: daysAgo
-      }
-    }
-  });
-
-  //only return events that have at least 4 associated articles and have been reported on by requested bias
-  let filteredByArticles = events.filter(event => event.Articles.length > 3);
-  let results = {left:[], right:[]};
-
-  for (const event of events) {
-    if (event.Articles.length > 3) {
-      let right = event.Articles.filter(article => sourceUris.right.includes(article.Source.uri));
-      let left = event.Articles.filter(article => sourceUris.left.includes(article.Source.uri));
-
-      if (right.length === 0 && left.length > 0) {
-        results.left.push(event);
-      } else if (left.length === 0 & right.length > 0) {
-        results.right.push(event);
-      }
-    }
-  }
-
-  //sort results to come back newest first
-  results.right = results.right.sort((a, b) => {
-    a = new Date(a.date);
-    b = new Date(b.date);
-    return a>b ? -1 : a<b ? 1 : 0;
-  }).map(event => {
+  //only return what the client cares about
+  results.right = results.right.map(event => {
     return {
       id: event.id,
       uri: event.uri,
@@ -305,11 +94,7 @@ app.get('/api/events/single-sided', wrap(async (req, res) => {
     }
   });
 
-  results.left = results.left.sort((a, b) => {
-    a = new Date(a.date);
-    b = new Date(b.date);
-    return a>b ? -1 : a<b ? 1 : 0;
-  }).map(event => {
+  results.left = results.left.map(event => {
     return {
       id: event.id,
       uri: event.uri,
