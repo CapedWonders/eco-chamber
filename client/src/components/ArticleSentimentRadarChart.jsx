@@ -11,7 +11,7 @@ class ArticleSentimentChartRadar extends React.Component {
 
     const title = this.props.sentiments.filter(x => x.title)[0];
     const body = this.props.sentiments.filter(x => x.body)[0];
-    const data = {
+    const data = title && body ? {
       labels: ['fear', 'disgust', 'anger', 'sadness', 'joy'],
       datasets: [
         {
@@ -35,13 +35,13 @@ class ArticleSentimentChartRadar extends React.Component {
           data: [body.fear, body.disgust, body.anger, body.sadness, body.joy]
         }
       ]
-    };
+    } : null;
     
-    return (
+    return data ? (
       <div className='sentiment-chart'>
         <Radar data={data} />
       </div>
-    )
+    ) : <div></div>
   }
 };
 

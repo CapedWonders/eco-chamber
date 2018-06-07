@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom'
 import Api from '../helpers/Api';
 import WordMap from './WordMap.jsx';
 import BarChart from './BarChart.jsx';
@@ -205,7 +206,9 @@ class Gameboard extends Component {
                   {eventOptions}
                 </select>               
               </form>
-              <WordMap size="20" width="350" height="200" className="word-map" data={this.state.weightedWords}/> 
+              <Link to={"/event/" + this.state.eventId + "/articles"}>
+                <WordMap size="20" width="350" height="200" className="word-map" data={this.state.weightedWords}/> 
+              </Link>
               <div className="game-title">
                 <h1 className="game-number">2</h1>
                 <h3>SELECT NUMBER OF ARTICLES</h3>
@@ -225,7 +228,9 @@ class Gameboard extends Component {
                 <h1 className="game-number">3</h1>
                 <h3>GUESS SPECTRUM</h3>
               </div>
-              <div className="game-article-title">{this.state.selectedArticle.title}</div>
+              <a style={{color: 'inherit', textDecoration: 'none'}} target="_about" href={this.state.selectedArticle.url}>
+                <div className="game-article-title">{this.state.selectedArticle.title}</div>
+              </a>
 
               <div className="game-bias">
                 <div onClick={() => this.calculateBias('right')} className="right">

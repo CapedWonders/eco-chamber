@@ -14,7 +14,7 @@ class SingleSided extends Component {
       showModal: false,
       selected: null,
       savedEvents: [],
-      bias: '',
+      bias: 'left',
     };
   }
 

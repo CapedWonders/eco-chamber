@@ -32,7 +32,7 @@ class Profile extends Component {
 
   calculateBias = (ratings, titleOrArticleBias) => {
     if (ratings.length > 1) {
-       const average = ratings.reduce((a, b) => a[titleOrArticleBias] + b[titleOrArticleBias]) / ratings.length;
+       const average = ratings.map(rating => rating[titleOrArticleBias]).reduce((a, b) => a + b ) / ratings.length;
        const rounded = Math.round(average);
        return rounded === -1 
           ? "Not Biased" 
