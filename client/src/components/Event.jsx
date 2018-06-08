@@ -4,8 +4,10 @@ import Api from '../helpers/Api';
 import Sources from './Sources.jsx';
 import ArticleList from './ArticleList.jsx';
 import CompareArticles from './CompareArticles.jsx';
+import ArticleDetail from './ArticleDetail.jsx';
 import moment from 'moment';
 import WordMap from './WordMap.jsx';
+var FaClose = require('react-icons/lib/fa/close');
 import analyzeArticleTitles from '../helpers/WordMap.js';
 import Auth from '../helpers/Auth.js';
 
@@ -18,7 +20,9 @@ class Event extends Component {
       titleWords:{},
       weightedWords: [],
       selectedArticles: [],
-      showModal: false,
+      showCompareModal: false,
+      showArticleModal: false,
+      selectedArticleforModal: [],
       ratings:[]
     };
 
@@ -99,7 +103,7 @@ class Event extends Component {
         state.push(article);
         state.sort((a, b) => a.bias > b.bias);
 
-        this.setState({selectedArticles: state}, () => this.compareArticles());
+        this.setState({selectedArticles: state});
       }   
     }
   }
@@ -110,15 +114,36 @@ class Event extends Component {
 
   compareArticles(e) {
     if (this.state.selectedArticles.length === 2) {
-      this.setState({showModal: true});
+      this.setState({showCompareModal: true});
     }
   }
 
+  setArticleModal = (articleId) => {
+    let matchingArticle = this.state.articles.filter(article => article.id === articleId);
+    this.setState({selectedArticleforModal: matchingArticle[0], showArticleModal:true});
+  }
+
+  clearArticleModal = () => {
+    this.setState({selectedArticleforModal: [], showArticleModal: false });
+  }
+
   closeModal() {
-    this.setState({showModal: false});
+    this.setState({showCompareModal: false});
   }
 
   render() {
+    const articleModal = this.state.showArticleModal 
+      ?  <div className="modal" style={{ display: 'block'}}>
+          <div className="modal-content">
+            <FaClose style={{"color":"darkgrey", "fontSize": 60}}onClick={this.clearArticleModal}/>
+            <ArticleDetail 
+              rated={this.state.ratings.filter(rating => rating.article.id === this.state.selectedArticleforModal.id).length > 0} 
+              article={this.state.selectedArticleforModal}
+            />
+          </div>
+        </div>
+      : <div></div>
+
     const sources = this.state.orderedSources.map(x => {
       return (
         <li key={x[0].bias}>
@@ -126,16 +151,61 @@ class Event extends Component {
         </li>
       )
     });
+
+    const compareOne = 
+    this.state.selectedArticles.length > 0
+      ? <div id="article-compare-detail-one">
+          <div className="article-compare-title">
+            <FaClose onClick={()=> this.toggleSelectedArticle(this.state.selectedArticles[0])}/>
+            {this.state.selectedArticles[0].title}
+          </div>
+          <button onClick={() => this.setArticleModal(this.state.selectedArticles[0].id)}>Rate Article</button>
+        </div>
+      : <div></div>
+
+    const compareTwo = 
+    this.state.selectedArticles.length === 2
+      ? <div id="article-compare-detail-two">
+          <div className="article-compare-title">
+            <FaClose onClick={()=> this.toggleSelectedArticle(this.state.selectedArticles[1])}/>
+            {this.state.selectedArticles[1].title}
+          </div>
+          <button onClick={() => this.setArticleModal(this.state.selectedArticles[1].id)}>Rate Article</button>
+        </div>
+      : <div></div>
   
     const articleDetails = 
     this.state.selectedArticles.length === 2 
-      ? <CompareArticles clear= {this.clearSelectedArticles} close={this.closeModal} show={this.state.showModal} articles={this.state.selectedArticles}/>
-      : <CompareArticles clear={this.clearSelectedArticles} show={this.state.showModal} articles={[{id: 1, title: '', body: '', sourceImage: '', Sentiments: [] }, {id: 1, title: '', body: '', sourceImage: '', Sentiments: [] }]}/>
+      ? <CompareArticles clear= {this.clearSelectedArticles} close={this.closeModal} show={this.state.showCompareModal} articles={this.state.selectedArticles}/>
+      : <CompareArticles clear={this.clearSelectedArticles} show={this.state.showCompareModal} articles={[{id: 1, title: '', body: '', sourceImage: '', Sentiments: [] }, {id: 1, title: '', body: '', sourceImage: '', Sentiments: [] }]}/>
+
+    const compareButton = 
+    this.state.selectedArticles.length === 2 
+      ?  <div className="compare-bottom">
+            <h3 onClick={this.compareArticles}>Compare Articles</h3>
+          </div>
+      : <div></div>
 
     return (
       <div>
+        {articleModal}
         <div className="event-top">        
-          <WordMap size="10" width="500" height="300"className="word-map" data={this.state.weightedWords}/>    
+          <WordMap size="11" width="400" height="250"className="word-map" data={this.state.weightedWords}/>   
+          <div className="compare-top">
+            <div className="article-one">
+              <h3>Select an article</h3>
+              {compareOne}           
+            </div>
+            <div className="article-two">
+              <h3>Select another article to compare</h3>
+              {compareTwo}
+            </div>
+            {compareButton}
+          </div>
+          <div className="spectrum">
+            <h2>left</h2>
+            <h2>right</h2>
+          </div>           
         </div>
 
         <div className="event-bottom">

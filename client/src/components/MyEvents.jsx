@@ -8,7 +8,6 @@ class MyEvents extends Component {
     super(props);
     this.state = {
       savedEvents: [],
-      hoverIndex: -1,
       selected: null
     };
   }
@@ -17,14 +16,6 @@ class MyEvents extends Component {
     Api.get('/users/user-events').then(savedEvents => {
       this.setState({ savedEvents });
     });
-  }
-
-  onMouseEnter = (e, i) => {
-    this.setState({ hoverIndex: i });
-  }
-
-  onMouseLeave = (e) => {
-    this.setState({ hoverIndex: -1 });
   }
 
   removeSaved = (e, eventId) => {

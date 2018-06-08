@@ -17,6 +17,11 @@ class Article extends Component {
 
   toggleSelected(e) {
     this.props.toggleArticle(this.props.article);
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
   }
 
   showModal() {
@@ -29,28 +34,21 @@ class Article extends Component {
   }
 
   render() {
-
+    let preview = this.props.article.body.split(' ').slice(0, 10).join(' ') + '...';
     let isSelected = this.props.selected.filter(x=> x.id === this.props.article.id).length > 0;
     let isRated = this.props.ratings.filter(rating => rating.article.id === this.props.article.id).length > 0;
 
     return ( 
       <div>
-        <div className="modal" style={{ display: this.state.showModal ? 'block' : 'none' }}>
-          <div className="modal-content">
-            <FaClose style={{"color":"darkgrey", "fontSize": 60}}onClick={this.closeModal}/>
-            <ArticleDetail getRatings={this.props.getRatings} rated={isRated} article={this.props.article}/>
-          </div>
-        </div>
-
         <div onClick={this.toggleSelected} className={isSelected ? 'article article-selected' : 'article'}>
           <div className="article-title">
-            <p>{this.props.article.title}</p>
+            <p>{this.props.article.title}</p>            
           </div>
           <div className="article-card-bottom">
+            <p className="preview">{preview}</p>
             <div className="article-date">
               <p>{moment(this.props.article.date).fromNow()}</p>
-            </div>
-            <button onClick={this.showModal} >View</button>     
+            </div>   
           </div>
         </div>
       </div>

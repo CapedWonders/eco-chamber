@@ -180,7 +180,7 @@ class ArticleDetail extends Component {
           {chart}         
         </div>    
         
-        <div className="article-body">
+        <div className="article-detail-body">
           <p>{this.props.article.body}</p>
           {form}
         </div>

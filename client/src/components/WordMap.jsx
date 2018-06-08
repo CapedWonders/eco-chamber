@@ -30,7 +30,7 @@ class EventWordCloud extends React.Component {
 
   render() {
     return (
-      <div> 
+      
         <WordCloud
           width={this.props.width}
           height={this.props.height}
@@ -38,7 +38,7 @@ class EventWordCloud extends React.Component {
           fontSizeMapper={this.fontSizeMapper}
           padding={2}
         />
-      </div>
+ 
     );
    } 
 };

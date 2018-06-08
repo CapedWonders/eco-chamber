@@ -68,12 +68,6 @@ class EventDetail extends Component {
     return (
       <div className="event-detail">     
         <h1 className="event-detail-title">{this.props.title}</h1>
-        <h2>REPORTING SOURCES</h2>
-
-        <div className="event-sources">
-          {sources}
-        </div>
-
         <div className="event-charts">
           <div className="event-radar">
             <h2>EVENT EMOTION ANALYSIS</h2>
@@ -88,6 +82,12 @@ class EventDetail extends Component {
             <h2>ARTICLE SENTIMENT</h2>
             <BarChart width={400} height={200} data={data}/>
           </div>
+        </div>
+        
+
+        <h2>REPORTING SOURCES</h2>
+        <div className="event-sources">
+          {sources}
         </div>
 
       </div>     

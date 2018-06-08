@@ -8,7 +8,7 @@ class ArticleList extends Component {
 
   render() {
 
-    const sorted = this.props.articles.sort((a, b) => a.date < b.date);
+    const sorted = this.props.articles.sort((a, b) => b.date.localeCompare(a.date));
   
     const articles = this.props.articles.length ? sorted.map(article => {
       return (

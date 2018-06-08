@@ -17,9 +17,9 @@ class Source extends Component {
 
       <div className={this.props.show ? "showSource" : "hideSource"}>
         <div className="source-image">       
-            <FaCaretLeft onClick={(e) => this.props.toggle(e, 'left')} className="fa-caret-left"/>
-            <img src={image}></img>
-            <FaCaretRight onClick={(e) => this.props.toggle(e, 'right')} className="fa-caret-right"/>
+          <FaCaretLeft onClick={(e) => this.props.toggle(e, 'left')} className="fa-caret-left"/>
+          <img src={image}></img>
+          <FaCaretRight onClick={(e) => this.props.toggle(e, 'right')} className="fa-caret-right"/>
         </div>
         <div className="source-title">       
           <h2>{title}</h2>

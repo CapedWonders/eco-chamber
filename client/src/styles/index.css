@@ -12,9 +12,15 @@ body {
 /* Nav */
 .navbar {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-content: space-between;
   background-color: #008080;
 } 
+
+.navbar h1 {
+  letter-spacing: 2px;
+  font-size: 1.5cem;
+}
 
 .title {
   display: grid;
@@ -84,6 +90,27 @@ body {
   font-size: 20;
 }
 
+.search-bar-container {
+  display: flex;
+  padding-top: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-input {
+  margin-right: 10px;
+  padding: 4px;
+  border-radius: 1px;
+}
+
+.search-input:focus {
+  outline-width: 0;
+}
+
+.search-bar-container > a {
+  text-decoration: none;
+}
+
 .nav-right {
   display: flex;
   justify-content: flex-end;
@@ -105,6 +132,7 @@ body {
   justify-content: space-evenly;
   align-items: center;
   border-bottom: 2px solid #f1f1f1;
+  height: 50px;
 }
 
 .category {
@@ -120,8 +148,7 @@ body {
 
 /*Profile*/
 .profile {
-  margin-left: 150px;
-  margin-right: 150px;
+  margin-top: 2em;
   display: flex;
   flex-direction: column;
   text-align: center;
@@ -130,6 +157,8 @@ body {
 .ratings {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  margin-left: 200px;
+  margin-right: 200px;
 }
 
 /* Events container */
@@ -149,7 +178,7 @@ body {
 
 .events-container li {
   display: grid;
-  grid-template-rows: 1fr 50px; 
+  grid-template-rows: 1fr 70px; 
 }
 
 .li-header {
@@ -210,7 +239,6 @@ body {
 .event-detail {
   display: grid;
   grid-gap: 20px;
-  grid-template-rows: auto auto 1fr 1fr;
 }
 
 .event-detail-title {
@@ -254,22 +282,78 @@ body {
 /* articles */
 
 .word-map {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
+  grid-area: wordMap;
 }
 
 .event-top {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  grid-template-areas: 
+    "wordMap compareTop compareTop"
+    "wordMap compareTop compareTop"
+    "spectrum spectrum spectrum";
+  grid-template-columns: 1fr 1fr 1fr;
   grid-column-gap: 50px;
+  padding: 20px;
+  padding-bottom: 0px;
+}
+
+.event-top svg {
+   border-right: 1px solid black;
+}
+
+.compare-top {
+  padding-left: 30px;
+  grid-area: compareTop;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "compareOne compareTwo"
+    "compareOne compareTwo"
+    "compareAll compareAll";
+}
+
+.compare-bottom {
+  grid-area: compareAll;
+  text-align: center;
+}
+
+.compare-bottom h3 {
+  margin: auto;
+  padding: 10px;
+  border: 1px solid #008080;
+  border-radius: 5px
+}
+
+.compare-bottom h3:hover {
+  background-color: #008080;
+  color: white;
+}
+
+.spectrum {
+
+ /* background: linear-gradient(to right, teal, white, teal);*/
+  background: linear-gradient(45deg, #008080,#f3f3f3, #f3f3f3,#008080);
+  border-radius: 35px;
+  padding-left: 30px;
+  padding-right: 30px;
+  height: 35px;
+  grid-area: spectrum;
+  color: white;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  margin-right: 20px;
+  margin-left: 20px;
+  margin-top: 20px;
+}
+
+.spectrum h2 {
+  font-size: 1em;
+  letter-spacing: 2px;
 }
 
 .event-bottom {
-  border-top: 5px solid #008080;
   display: grid;
   align-items: center;
   justify-content: center;
@@ -328,7 +412,7 @@ body {
   grid-template-columns: 1fr 1fr;
 }
 
-.article-body {
+.article-detail-body {
   display: grid;
   grid-template-rows: 1fr 1fr;
 }
@@ -354,18 +438,17 @@ body {
   margin-left: 2em;
   margin-right: 2em;
   display: grid;
-  grid-gap: 20px;
+  grid-gap: 10px;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   padding-left: 0;
   justify-content: space-between;
 } 
 
 .articles-container > li {
-  background-color: lightgrey;
+  background-color: #f3f3f3;
   display: flex;
   flex-direction: column; 
   min-height: 800px;
-  box-shadow: 3px 3px #888888;
 }
 
 .article-body {
@@ -376,28 +459,77 @@ body {
 .article {
   text-decoration: none;
   color: black;
-  padding:5px;
+  padding-right:15px;
+  padding-left:15px;
   margin: 5px;
-  margin-bottom: 15px;
   display: flex;
   flex-direction: column;
   background-color: white;
   border-radius: 5px;
   border: solid lightgrey 1px;
-  box-shadow: 3px 3px #888888;
+}
+
+.preview {
+  font-size: 14px;
+}
+
+.article-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.article-date {
+  color: grey;
+}
+
+
+.article-one, .article-two {
+  display: grid;
+  grid-template-rows: 60px 150px;
+}
+
+.article-one {
+  grid-area: compareOne;
+}
+
+.article-two {
+  grid-area: compareTwo;
+}
+
+#article-compare-detail-one, #article-compare-detail-two {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-rows: 1fr 1fr;
+}
+
+/* The animation code */
+@keyframes example {
+    from {background-color: #3F4045;}
+    to {background-color: #f3f3f3;}
+}
+
+.article-compare-title {
+  display: grid;
+  grid-gap: 10px;
+  text-align: justify;
+  width: 300px;
+  height: 100px;
+  background-color: #f3f3f3;
+  animation-name: example;
+  animation-duration: 2s;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.article-compare-title svg {
+  margin: 0;
+  border: 0px;
+  cursor: pointer;
 }
 
 .article-selected {
   background-color: #e5e6e8;
-}
-
-.article-card-bottom {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-
-.article-card-bottom button {
-  justify-self: end;
 }
 
 /* gameboard */
@@ -616,7 +748,6 @@ button:hover {
   text-align: center;
   padding-right: 200px;
   padding-left: 200px;
-  /*background-color: pink;*/
 }
 
 .about-page h1 {
@@ -653,10 +784,6 @@ button:hover {
 
 .bios img {
   border: 2px solid lightgrey;
-}
-
-.footer {
-  background-color: grey;
 }
 
 /* sigin and signup component*/

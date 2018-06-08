@@ -15,6 +15,7 @@ import SingleSided from './SingleSided.jsx';
 import Profile from './Profile.jsx';
 import Sidebar from'./Sidebar.jsx';
 import About from './About.jsx';
+import SearchResults from './SearchResults.jsx';
 
 class App extends Component {
   constructor(props) {
@@ -50,6 +51,7 @@ class App extends Component {
           <Route path="/events/single-sided" component={SingleSided}/>
           <Route path="/user/profile" component={Profile}/>
           <Route path="/about" component={About}/>
+          <Route path="/search-results/:query" component={SearchResults}/>
         </Switch>
       </div>
     );
