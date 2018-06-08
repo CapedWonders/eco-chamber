@@ -1,4 +1,3 @@
-import Api from '../helpers/Api';
 import Chart from 'chart.js';
 import React from 'react';
 import { Radar } from 'react-chartjs-2';
@@ -8,17 +7,10 @@ import { Radar } from 'react-chartjs-2';
 class EventSentimentChartRadar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { left: {}, right: {}, center: {} };
   }
-
-  componentDidMount() {
-    let { eventId } = this.props;
-    Api.get('/eventSentiment', { eventId }).then(sentiments => {
-      this.setState({ left: sentiments.left , right: sentiments.right, center: sentiments.center });  
-    }); 
-  }
+  
   render() {
-    const leftData = this.state.left.sentiment 
+    const leftData = this.props.left.sentiment 
       ? 
       {
         label: 'Left',
@@ -28,11 +20,11 @@ class EventSentimentChartRadar extends React.Component {
         pointBorderColor: '#fff',
         pointHoverBackgroundColor: '#fff',
         pointHoverBorderColor: 'rgba(179,181,198,1)',
-        data: [this.state.left.fear, this.state.left.disgust, this.state.left.anger, this.state.left.sadness, this.state.left.joy]
+        data: [this.props.left.fear, this.props.left.disgust, this.props.left.anger, this.props.left.sadness, this.props.left.joy]
       }
       : null; 
 
-    const rightData = this.state.right.sentiment 
+    const rightData = this.props.right.sentiment 
       ? 
       {
         label: 'Right',
@@ -42,11 +34,11 @@ class EventSentimentChartRadar extends React.Component {
         pointBorderColor: '#fff',
         pointHoverBackgroundColor: '#fff',
         pointHoverBorderColor: 'rgba(179,181,198,1)',
-        data: [this.state.right.fear, this.state.right.disgust, this.state.right.anger, this.state.right.sadness, this.state.right.joy]
+        data: [this.props.right.fear, this.props.right.disgust, this.props.right.anger, this.props.right.sadness, this.props.right.joy]
       }
       : null; 
 
-    const centerData = this.state.center.sentiment 
+    const centerData = this.props.center.sentiment 
       ? 
       {
         label: 'Center',
@@ -56,7 +48,7 @@ class EventSentimentChartRadar extends React.Component {
         pointBorderColor: '#fff',
         pointHoverBackgroundColor: '#fff',
         pointHoverBorderColor: 'rgba(179,181,198,1)',
-        data: [this.state.center.fear, this.state.center.disgust, this.state.center.anger, this.state.center.sadness, this.state.center.joy]
+        data: [this.props.center.fear, this.props.center.disgust, this.props.center.anger, this.props.center.sadness, this.props.center.joy]
       }
       : null; 
 

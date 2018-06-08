@@ -4,7 +4,7 @@ import Api from '../helpers/Api';
 import WordMap from './WordMap.jsx';
 import BarChart from './BarChart.jsx';
 import analyzeArticleTitles from '../helpers/WordMap.js';
-import formatDataForGameResults from '../helpers/BarChart.js';
+import BarChartHelper from '../helpers/BarChart.js';
 
 class Gameboard extends Component {
   constructor(props) {
@@ -176,9 +176,12 @@ class Gameboard extends Component {
       : this.state.correct === false ? (<div id="try-again">Try Again</div>)
       : (<div></div>)
 
+    const helper = new BarChartHelper(this.state.score, null);
+    const barData = helper.formatDataForGameResults();
+
     const finished = this.state.finished 
       ? (<div className="game-results">
-          <BarChart data={formatDataForGameResults(this.state.score)} width="200" height="100"/>
+          <BarChart data={barData} width={200} height={100}/>
         </div>)
       : (<div>
           <div className="game-article">

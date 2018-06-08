@@ -50,7 +50,7 @@ class EventCard extends Component {
       <div className="modal" style={{ display: this.props.selected === id ? 'block' : 'none' }}>
             <div className="modal-content">
               <FaClose style={{"color":"darkgrey", "fontSize": 60}} onClick={this.props.close}/>
-              <EventDetail eventId={id}/>
+              <EventDetail title={title} eventId={id}/>
             </div>
           </div>
       <hr/>

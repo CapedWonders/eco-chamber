@@ -49,11 +49,14 @@ const averageSentiment = sentiments => {
       totals['anger'] = totals['anger'] ? totals['anger'] += item.anger : item.anger;
       totals['joy'] = totals['joy'] ? totals['joy'] += item.joy : item.joy;
       totals['sadness'] = totals['sadness'] ? totals['sadness'] += item.sadness : item.sadness;
+      totals['labels'] = totals['labels'] ? totals['labels'].concat([item.label]) : [item.label];
     } 
   }
   //average all values
   for (let  item in totals) {
-    totals[item] = totals[item] / numSentiments;
+    if (item !== 'labels') {
+      totals[item] = totals[item] / numSentiments;
+    }   
   }
 
   return totals;

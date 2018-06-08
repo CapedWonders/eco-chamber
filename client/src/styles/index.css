@@ -207,6 +207,40 @@ body {
   margin-right: 30px;
 }
 
+.event-detail {
+  display: grid;
+  grid-gap: 20px;
+  grid-template-rows: auto auto 1fr 1fr;
+}
+
+.event-detail-title {
+  margin-left: 200px;
+  margin-right: 200px;
+  letter-spacing: 2px;
+  font-size: 2em;
+  padding: 10px;
+  background-color: #F8F8F8;
+  box-shadow: 3px 3px lightgrey;
+}
+
+.event-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.event-sources {
+  margin: 2em;
+  margin-right: 200px;
+  margin-left: 200px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.event-sources img {
+  height: 60px;
+  width: 60px;
+}
+
 .toggle-bias {
   display: flex;
   flex-direction: row;
