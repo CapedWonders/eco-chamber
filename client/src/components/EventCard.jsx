@@ -33,7 +33,7 @@ class EventCard extends Component {
             <h2 className="li-header">{title}</h2>
              
             <div value={id} className="event-text">
-              <p>{summary}</p>
+              <p>{summary}...</p>
             </div>
           </Link>
         </div>

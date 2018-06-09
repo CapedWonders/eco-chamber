@@ -182,6 +182,7 @@ class ArticleDetail extends Component {
         
         <div className="article-detail-body">
           <p>{this.props.article.body}</p>
+          <hr/>
           {form}
         </div>
       </div>     

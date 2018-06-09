@@ -419,7 +419,6 @@ body {
 
 .article-detail-body {
   display: grid;
-  grid-template-rows: 1fr 1fr;
   line-height: 1.5;
   font-size: 18px;
 }
@@ -465,7 +464,7 @@ body {
 }
 
 .article {
-  text-align: justify;
+  text-align: start;
   text-decoration: none;
   color: black;
   padding-right:15px;
