@@ -10,7 +10,6 @@ class BarChart extends React.Component {
   render() {
     return (
       <div>
-        <h2>Your Results</h2>
         <Bar
           data={this.props.data}
           width={this.props.width}
