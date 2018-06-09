@@ -47,7 +47,7 @@ class Event extends Component {
   getSavedRatings = () => {
     let jwt = Auth.getJWT();
     if (jwt) {
-      Api.get('/users/user-ratings').then(ratings => this.setState({ ratings }));
+      return Api.get('/users/user-ratings').then(ratings => this.setState({ ratings }));
     }   
   }
 
@@ -139,6 +139,7 @@ class Event extends Component {
             <ArticleDetail 
               rated={this.state.ratings.filter(rating => rating.article.id === this.state.selectedArticleforModal.id).length > 0} 
               article={this.state.selectedArticleforModal}
+              getRatings={this.getSavedRatings}
             />
           </div>
         </div>

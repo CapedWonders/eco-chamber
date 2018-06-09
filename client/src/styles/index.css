@@ -391,6 +391,10 @@ body {
   border: 1px solid white;  
 }
 
+.modal-content > svg {
+  margin-top: 0px;
+}
+
 .article-cols {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -399,6 +403,7 @@ body {
 
 .article-detail {
   padding: 15px;
+  margin: 20px;
 }
 
 .article-detail-top {
@@ -415,6 +420,8 @@ body {
 .article-detail-body {
   display: grid;
   grid-template-rows: 1fr 1fr;
+  line-height: 1.5;
+  font-size: 18px;
 }
 
 /* The Close Button */
@@ -449,6 +456,7 @@ body {
   display: flex;
   flex-direction: column; 
   min-height: 800px;
+  text-align: center;
 }
 
 .article-body {
@@ -457,6 +465,7 @@ body {
 }
 
 .article {
+  text-align: justify;
   text-decoration: none;
   color: black;
   padding-right:15px;
@@ -741,6 +750,14 @@ button:hover {
 
 .hideSource {
   display:none;
+}
+
+.num-sources {
+  background-color: darkgrey;
+  color: white;
+  width: 30px;
+  margin-left: 15px;
+  border-radius: 50px;
 }
 
 /*About page*/

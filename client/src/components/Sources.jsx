@@ -46,6 +46,7 @@ class Sources extends Component {
   
     return (
       <div className="sources-list">
+        <h3 className="num-sources">{this.props.sources.filter(source => source.Articles.length > 0).length}</h3>
         {sourcesAll}
       </div>
     )
