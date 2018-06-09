@@ -156,7 +156,7 @@ class ArticleDetail extends Component {
             </label>
           </div>
         </form>
-        <button onClick={this.handleSubmit}>Sumbit Review</button>  
+        <button onClick={this.handleSubmit}>Submit Review</button>  
       </div>   
              
 
