@@ -92,7 +92,6 @@ body {
 
 .search-bar-container {
   display: flex;
-  padding-top: 5px;
   align-items: center;
   justify-content: center;
 }
@@ -100,7 +99,7 @@ body {
 .search-input {
   margin-right: 10px;
   padding: 4px;
-  border-radius: 1px;
+  border-radius: 6px;
 }
 
 .search-input:focus {
