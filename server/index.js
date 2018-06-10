@@ -48,6 +48,7 @@ app.get('/api/events', wrap(async (req, res) => {
   res.json(results);
 }));
 
+//single event information with associated articles and sources
 app.get('/api/events/articles', wrap(async (req, res) => {
   const { eventId } = req.query;
   const event = await db.Event.find({

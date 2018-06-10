@@ -137,7 +137,7 @@ const getBiasedEvents = async(daysAgo) => {
 
   let results = {left:[], right:[]};
 
-  //only return events that have at lest 3 articles 
+  //only return events that have at lest 4 articles 
   for (const event of events) {
     if (event.Articles.length > 3) {
       let right = event.Articles.filter(article => sourceUris.right.includes(article.Source.uri));
