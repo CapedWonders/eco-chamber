@@ -46,22 +46,24 @@ class EventDetail extends Component {
     return results;
   }
 
-  render() {
-    const sources = this.state.sources.map(source => {
+  renderSources = () => {
+    return this.state.sources.map(source => {
       return (
-        <div key={source.id} className="event-source">
+        <div key={source.title} className="event-source">
           <img src={source.image}></img>
           <h3>{source.title}</h3>
         </div>
       )
     });
+  }
 
+  render() {
+    const sources = this.renderSources();
     const labelData = {
       left: this.countLabels(this.state.left.labels),
       right: this.countLabels(this.state.right.labels),
       center:this.countLabels(this.state.center.labels)
     };
-
     const helper = new BarChartHelper(null, labelData);
     const data = helper.formatDataForEventResults();
    

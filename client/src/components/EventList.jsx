@@ -23,8 +23,8 @@ class EventList extends Component {
     this.setState({ events });
   }
 
-  render() {
-    let events = this.state.events.length === 0
+  renderEvents = () => {
+    return this.state.events.length === 0
       ? <div className="loading"><div className="loading-spinner"></div></div>
       : this.state.events.map(event =>
           <EventCard  
@@ -37,7 +37,11 @@ class EventList extends Component {
             remove={this.props.remove}
             saved={this.props.saved.filter(x=> x.id === event.id).length > 0}
           />
-        );
+       );
+  }
+
+  render() {
+    let events = this.renderEvents();
 
     return (
       <div className="events-list">

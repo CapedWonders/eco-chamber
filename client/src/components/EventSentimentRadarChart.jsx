@@ -2,15 +2,13 @@ import Chart from 'chart.js';
 import React from 'react';
 import { Radar } from 'react-chartjs-2';
 
-
-
 class EventSentimentChartRadar extends React.Component {
   constructor(props) {
     super(props);
   }
-  
-  render() {
-    const leftData = this.props.left.sentiment 
+
+  getLeftData = () => {
+    return this.props.left.sentiment 
       ? 
       {
         label: 'Left',
@@ -23,8 +21,10 @@ class EventSentimentChartRadar extends React.Component {
         data: [this.props.left.fear, this.props.left.disgust, this.props.left.anger, this.props.left.sadness, this.props.left.joy]
       }
       : null; 
+  }
 
-    const rightData = this.props.right.sentiment 
+  getRightData = () => {
+    return this.props.right.sentiment 
       ? 
       {
         label: 'Right',
@@ -37,8 +37,10 @@ class EventSentimentChartRadar extends React.Component {
         data: [this.props.right.fear, this.props.right.disgust, this.props.right.anger, this.props.right.sadness, this.props.right.joy]
       }
       : null; 
+  }
 
-    const centerData = this.props.center.sentiment 
+  getCenterData = () => {
+    return this.props.center.sentiment 
       ? 
       {
         label: 'Center',
@@ -51,25 +53,32 @@ class EventSentimentChartRadar extends React.Component {
         data: [this.props.center.fear, this.props.center.disgust, this.props.center.anger, this.props.center.sadness, this.props.center.joy]
       }
       : null; 
+  }
 
-    const calculateDataSets = () => {
-      let datasets = [];
+  calculateDataSets = () => {
+    const leftData = this.getLeftData();
+    const rightData = this.getRightData(); 
+    const centerData = this.getCenterData();
 
-      if (leftData) {
-        datasets.push(leftData);
-      }
-      if (rightData) {
-        datasets.push(rightData);
-      }
-      if (centerData) {
-        datasets.push(centerData)
-      }
-      return datasets;
+    let datasets = [];
+
+    if (leftData) {
+      datasets.push(leftData);
     }
-
+    if (rightData) {
+      datasets.push(rightData);
+    }
+    if (centerData) {
+      datasets.push(centerData)
+    }
+    
+    return datasets;
+  }
+  
+  render() {
     const data = {
       labels: ['fear', 'disgust', 'anger', 'sadness', 'joy'],
-      datasets: calculateDataSets()
+      datasets: this.calculateDataSets()
     };
 
     if (data.datasets.length > 0) {
