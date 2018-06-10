@@ -31,6 +31,8 @@ app.get('/api/categories', wrap(async (req, res) => {
 // events by category
 app.get('/api/events', wrap(async (req, res) => {
   const { categoryId } = req.query;
+
+  // limit initial events to ones created by our system in the last 5 days
   const events = await helpers.getBalancedEvents(categoryId, 5);
 
   //only send back the info client cares about
