@@ -13,11 +13,6 @@ class TopEvents extends Component {
       selected: null,
       savedEvents: []
     };
-    this.getSavedEvents = this.getSavedEvents.bind(this);
-    this.closeModal = this.closeModal.bind(this);
-    this.showModal = this.showModal.bind(this);
-    this.saveEvent = this.saveEvent.bind(this);
-    this.removeSaved = this.removeSaved.bind(this);
   }
 
   componentDidMount() {
@@ -29,7 +24,7 @@ class TopEvents extends Component {
     Api.get('/topEvents').then(events => this.setState({ events }));
   }
 
-  getSavedEvents() {
+  getSavedEvents = () => {
     if (Auth.getJWT()) {
       Api.get('/users/user-events').then(savedEvents => this.setState({ savedEvents }));
     } 
@@ -43,11 +38,11 @@ class TopEvents extends Component {
     Api.post('/users/user-events', { eventId }).then(res => this.getSavedEvents());
   }
 
-  closeModal() {
+  closeModal = () => {
     this.setState({ selected: null});
   }
 
-  showModal(id) {
+  showModal = (id) => {
     this.setState({ selected: id});
   }
 
