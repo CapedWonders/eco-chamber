@@ -137,13 +137,16 @@ class Gameboard extends Component {
 
     let currentScore = this.state.score;
 
-    if (sources[spectrum].includes(this.state.articles[this.state.articleIndex].Source.bias)) {
-      currentScore[spectrum].correct = currentScore[spectrum].correct + 1;
-      this.setState({correct: true, score: currentScore});
-    } else {
-      currentScore[spectrum].incorrect = currentScore[spectrum].incorrect + 1;
-      this.setState({correct: false, score: currentScore});
+    if (!this.state.finished) {
+       if (sources[spectrum].includes(this.state.articles[this.state.articleIndex].Source.bias)) {
+          currentScore[spectrum].correct = currentScore[spectrum].correct + 1;
+          this.setState({correct: true, score: currentScore});
+        } else {
+          currentScore[spectrum].incorrect = currentScore[spectrum].incorrect + 1;
+          this.setState({correct: false, score: currentScore});
+        }
     }
+   
   }
 
   handleChange(event) {
