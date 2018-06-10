@@ -6,10 +6,9 @@ var FaClose = require('react-icons/lib/fa/close');
 class CompareArticles extends Component {
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick() {
+  handleClick = () => {
     this.props.clear();
     this.props.close();
   }
@@ -20,8 +19,8 @@ class CompareArticles extends Component {
         <div className="modal-content">
         <FaClose style={{"color":"darkgrey", "fontSize": 60}}onClick={this.handleClick}/>
           <div className="article-cols">
-            <ArticleDetail article={this.props.articles[0]}/>
-            <ArticleDetail article={this.props.articles[1]}/>
+            <ArticleDetail rated={this.props.rated1} getRatings={this.props.getRatings} article={this.props.articles[0]}/>
+            <ArticleDetail rated={this.props.rated2} getRatings={this.props.getRatings} article={this.props.articles[1]}/>
           </div>
         </div>
       </div>

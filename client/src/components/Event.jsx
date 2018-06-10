@@ -177,8 +177,20 @@ class Event extends Component {
   
     const articleDetails = 
     this.state.selectedArticles.length === 2 
-      ? <CompareArticles clear= {this.clearSelectedArticles} close={this.closeModal} show={this.state.showCompareModal} articles={this.state.selectedArticles}/>
-      : <CompareArticles clear={this.clearSelectedArticles} show={this.state.showCompareModal} articles={[{id: 1, title: '', body: '', sourceImage: '', Sentiments: [] }, {id: 1, title: '', body: '', sourceImage: '', Sentiments: [] }]}/>
+      ? <CompareArticles 
+          clear= {this.clearSelectedArticles} 
+          close={this.closeModal} 
+          show={this.state.showCompareModal} 
+          articles={this.state.selectedArticles}
+          getRatings={this.getSavedRatings}
+          rated1={this.state.ratings.filter(rating => rating.article.id === this.state.selectedArticles[0].id).length > 0} 
+          rated2={this.state.ratings.filter(rating => rating.article.id === this.state.selectedArticles[1].id).length > 0}
+        />
+      : <CompareArticles 
+          clear={this.clearSelectedArticles} 
+          show={this.state.showCompareModal} 
+          articles={[{id: 1, title: '', body: '', sourceImage: '', Sentiments: [] }, {id: 1, title: '', body: '', sourceImage: '', Sentiments: [] }]}
+        />
 
     const compareButton = 
     this.state.selectedArticles.length === 2 

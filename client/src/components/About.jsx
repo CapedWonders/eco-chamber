@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-var ArrowsH= require('react-icons/lib/fa/arrows-h');
-var BarChart = require('react-icons/lib/fa/bar-chart');
-var BalanceScale = require('react-icons/lib/fa/balance-scale');
-var BubbleChart = require('react-icons/lib/md/bubble-chart');
-var Swap = require('react-icons/lib/md/swap-horiz')
+const ArrowsH = require('react-icons/lib/fa/arrows-h');
+const BarChart = require('react-icons/lib/fa/bar-chart');
+const BalanceScale = require('react-icons/lib/fa/balance-scale');
+const BubbleChart = require('react-icons/lib/md/bubble-chart');
+const Swap = require('react-icons/lib/md/swap-horiz');
 
 class About extends Component {
   constructor(props) {

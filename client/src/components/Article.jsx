@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import ArticleDetail from './ArticleDetail.jsx';
-var FaClose = require('react-icons/lib/fa/close');
+const FaClose = require('react-icons/lib/fa/close');
 
 class Article extends Component {
   constructor(props) {
@@ -10,12 +10,9 @@ class Article extends Component {
       selected: false,
       showModal: false
     }
-    this.toggleSelected = this.toggleSelected.bind(this);
-    this.showModal = this.showModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
   }
 
-  toggleSelected(e) {
+  toggleSelected = (e) => {
     this.props.toggleArticle(this.props.article);
     window.scroll({
       top: 0,
@@ -24,13 +21,13 @@ class Article extends Component {
     });
   }
 
-  showModal() {
+  showModal = () => {
     this.toggleSelected();
     this.setState({showModal: true});
   }
 
-  closeModal() {
-    this.setState({showModal: false})
+  closeModal = () => {
+    this.setState({showModal: false});
   }
 
   render() {

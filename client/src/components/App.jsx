@@ -1,14 +1,12 @@
 
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-import Api from '../helpers/Api';
 import Categories from './Categories.jsx';
 import Navbar from './Navbar.jsx';
 import Events from './Events.jsx';
 import Event from './Event.jsx';
 import Signup from './Signup.jsx';
 import Signin from './Signin.jsx';
-import MyEvents from './MyEvents.jsx';
 import TopEvents from './TopEvents.jsx';
 import Gameboard from './Gameboard.jsx';
 import SingleSided from './SingleSided.jsx';
