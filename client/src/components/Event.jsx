@@ -7,9 +7,9 @@ import CompareArticles from './CompareArticles.jsx';
 import ArticleDetail from './ArticleDetail.jsx';
 import moment from 'moment';
 import WordMap from './WordMap.jsx';
-var FaClose = require('react-icons/lib/fa/close');
 import analyzeArticleTitles from '../helpers/WordMap.js';
 import Auth from '../helpers/Auth.js';
+import FaClose from 'react-icons/lib/fa/close';
 
 class Event extends Component {
   constructor(props) {

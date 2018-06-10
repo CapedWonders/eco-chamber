@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import ArticleDetail from './ArticleDetail.jsx';
-const FaClose = require('react-icons/lib/fa/close');
+import FaClose from 'react-icons/lib/fa/close';
 
 class Article extends Component {
   constructor(props) {
