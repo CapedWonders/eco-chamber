@@ -61,7 +61,9 @@ class SingleSided extends Component {
     const show = biasedEvents.length === 0 
       ? (<div className="loading"><div className="loading-spinner"></div></div>)
       : (          
-          <EventList 
+          <EventList
+            add={this.saveEvent}
+            remove={this.removedSaved} 
             selected={this.state.selected}
             open={this.showModal} 
             close= {this.closeModal} 
