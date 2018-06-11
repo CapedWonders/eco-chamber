@@ -20,6 +20,7 @@ class Gameboard extends Component {
       articleIndex: 0,
       completed: false,
       correct: null,
+      numArticles: "all",
       score: {
         left: {
           correct: 0,
@@ -35,17 +36,6 @@ class Gameboard extends Component {
         } 
       }      
     };
-
-    this.setSources = this.setSources.bind(this);
-    this.setEvent = this.setEvent.bind(this);
-    this.setArticles = this.setArticles.bind(this);
-    this.getWordMapData = this.getWordMapData.bind(this);
-    this.newArticle = this.newArticle.bind(this);
-    this.randomizeArticles = this.randomizeArticles.bind(this);
-    this.finishedGame = this.finishedGame.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleChangeArticle = this.handleChangeArticle.bind(this);
-    this.resetScore = this.resetScore.bind(this);
   }
 
  componentDidMount() {
@@ -57,7 +47,7 @@ class Gameboard extends Component {
    }); 
   } 
 
-  newArticle() {
+  newArticle = () => {
     let current = this.state.articleIndex;
     let newIndex = current === this.state.articles.length -1 ? 0 : current + 1;
     if (newIndex === 0) {
@@ -67,15 +57,15 @@ class Gameboard extends Component {
     }  
   }
 
-  finishedGame() {
+  finishedGame = () => {
     this.setState({finished: true});
   }
 
-  setEvent(eventId) {
+  setEvent = (eventId) => {
     let previous = this.state.selectedEvent.id;
-    let event = this.state.events.filter(event => event.id === eventId)[0];
-   
+    let event = this.state.events.filter(event => event.id === eventId)[0]; 
     let score = { left: {correct:0, incorrect:0}, right: {correct:0, incorrect: 0}, center: {correct: 0, incorrect: 0}};
+    
     this.setState({ correct: null, finished: false, selectedEvent: event, score, eventId: event.id }, () =>  {
       this.getWordMapData(event.Articles);  
       this.setArticles("all");
@@ -83,7 +73,7 @@ class Gameboard extends Component {
     });
   }
 
-  setSources() {
+  setSources = () => {
     let event = this.state.selectedEvent;
     let sources = {
       right: event.Articles.filter(article => article.Source.bias === 1 || article.Source.bias === 2).map(article => article.Source),
@@ -93,27 +83,27 @@ class Gameboard extends Component {
     this.setState({ sources: sources });
   }
   
-  resetScore() {
+  resetScore = () => {
     let score = { left: {correct:0, incorrect:0}, right: {correct:0, incorrect: 0}, center: {correct: 0, incorrect: 0}};
     this.setState({ score, finished: false, correct: null, articleIndex: 0 });
   }
 
-  setArticles(numArticles) {
+  setArticles = (numArticles) => {
     let event = this.state.selectedEvent;
     let articles = this.randomizeArticles(event.Articles);
     if (numArticles !== "all") {
       articles = articles.slice(0, parseInt(numArticles));
     }
-    this.setState({ articles, selectedArticle: articles[0] }); 
+    this.setState({ numArticles, articles, selectedArticle: articles[0] }); 
     this.resetScore();
   }
 
-  getWordMapData(articles) {
+  getWordMapData = (articles) => {
     const data = analyzeArticleTitles(articles);
     this.setState({ titleWords: data.words, weightedWords: data.weighted });
   }
 
-  randomizeArticles(articles) { 
+  randomizeArticles = (articles) => { 
     var currentIndex = articles.length, temporaryValue, randomIndex;
 
     while (0 !== currentIndex) {
@@ -127,7 +117,7 @@ class Gameboard extends Component {
     return articles;
   }
 
-  calculateBias(spectrum) {
+  calculateBias = (spectrum) => {
 
     let sources = {
       left: [-1, -2],
@@ -138,37 +128,34 @@ class Gameboard extends Component {
     let currentScore = this.state.score;
 
     if (!this.state.finished) {
-       if (sources[spectrum].includes(this.state.articles[this.state.articleIndex].Source.bias)) {
-          currentScore[spectrum].correct = currentScore[spectrum].correct + 1;
-          this.setState({correct: true, score: currentScore});
-        } else {
-          currentScore[spectrum].incorrect = currentScore[spectrum].incorrect + 1;
-          this.setState({correct: false, score: currentScore});
-        }
+     if (sources[spectrum].includes(this.state.articles[this.state.articleIndex].Source.bias)) {
+        currentScore[spectrum].correct = currentScore[spectrum].correct + 1;
+        this.setState({correct: true, score: currentScore});
+      } else {
+        currentScore[spectrum].incorrect = currentScore[spectrum].incorrect + 1;
+        this.setState({correct: false, score: currentScore});
+      }
     }
    
   }
 
-  handleChange(event) {
+  handleChange = (event) => {
     this.setState({currentEventId: event.target.value}, () => this.setEvent(parseInt(this.state.currentEventId)));
   }
 
-  handleChangeArticle(event) {
+  handleChangeArticle = (event) => {
     this.setArticles(event.target.value);  
   }
 
-  render() {
-    const sources = this.state.sources;
-    const rightSources = [... new Set(sources.right.map(source => source.image))].map(image => <img key={image} src={image}></img>);
-    const centerSources = [... new Set(sources.center.map(source => source.image))].map(image => <img key={image} src={image}></img>);
-    const leftSources = [... new Set(sources.left.map(source => source.image))].map(image => <img key={image} src={image}></img>);
-    
-    const eventOptions = this.state.events.map((event) => {
+  renderEventOptions = () => {
+    return this.state.events.map((event) => {
       let truncated = event.title.split(' ').slice(0, 8).join(' ');
       return (<option key={event.id} value={event.id}>{truncated + "..."}</option>);
     });
+  }
 
-    const correct = this.state.correct === true
+  renderCorrect = () => {
+    return this.state.correct === true
       ? (
         <div className="correct">
           <h3>Correct!</h3>
@@ -178,11 +165,14 @@ class Gameboard extends Component {
         )
       : this.state.correct === false ? (<div id="try-again">Try Again</div>)
       : (<div></div>)
+  }
 
+  renderFinished = () => {
+    const correct = this.renderCorrect();
     const helper = new BarChartHelper(this.state.score, null);
     const barData = helper.formatDataForGameResults();
 
-    const finished = this.state.finished 
+    return this.state.finished 
       ? (<div className="game-results">
           <BarChart data={barData} width={200} height={100}/>
         </div>)
@@ -193,6 +183,16 @@ class Gameboard extends Component {
             <p className="remaining">{this.state.articles.length - this.state.articleIndex} articles remaining</p> 
             <button onClick={this.newArticle}>Next Article</button> 
         </div>)
+  }
+
+  render() {
+    const sources = this.state.sources;
+    const rightSources = [... new Set(sources.right.map(source => source.image))].map(image => <img key={image} src={image}></img>);
+    const centerSources = [... new Set(sources.center.map(source => source.image))].map(image => <img key={image} src={image}></img>);
+    const leftSources = [... new Set(sources.left.map(source => source.image))].map(image => <img key={image} src={image}></img>);
+   
+    const eventOptions = this.renderEventOptions();      
+    const finished = this.renderFinished();
 
     return this.state.events.length === 0 
       ? (<div className="loading"><div className="loading-spinner"></div></div>) 
@@ -201,7 +201,6 @@ class Gameboard extends Component {
           <h2>Is the article title from the left, center, or right side of the political spectrum?</h2>
           <hr/>
           <div className="game-cols">
-
             <div className ="game-event-col">
               <div className="game-title"> 
                 <h1 className="game-number">1</h1>

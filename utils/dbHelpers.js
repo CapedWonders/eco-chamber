@@ -15,7 +15,7 @@ const isBalanced = articles => {
   return balanced.right > 0 && balanced.left > 0;
 };
 
- const countValidSources = articles => {
+const countValidSources = articles => {
   let sources = [];
   for (const article of articles) {
     if (!sources.includes(article.Source.uri)) {
@@ -86,9 +86,7 @@ const calculateSentiment = event => {
 };
 
 const getBalancedEvents = async(categoryId, daysAgo) => {
-  // limit initial events to ones created by our system in the last 5 days
   const searchDate = calculateDate(daysAgo);
-
   const events = await db.Event.findAll({
     include: [{
       model: db.Subcategory,
@@ -106,13 +104,13 @@ const getBalancedEvents = async(categoryId, daysAgo) => {
   });
 
   //only return events that have associated articles and have been reported by at least 4 sources
-  let filteredByArticles = events.filter(event => event.Articles.length > 0);
-  let filteredBySources = filteredByArticles.filter(event => countValidSources(event.Articles) > 3);
-  //only returnbalanced events
-  let filteredBySpectrum = filteredBySources.filter(event => isBalanced(event.Articles));
+  //only return balanced events
+  let filteredBySources = events.filter(event => {
+    return countValidSources(event.Articles) > 3 && isBalanced(event.Articles);
+  });
 
   //sort results to come back newest first
-  const sorted = sortEventsNewestFirst(filteredBySpectrum);
+  const sorted = sortEventsNewestFirst(filteredBySources);
   return sorted;
 };
 
@@ -139,7 +137,7 @@ const getBiasedEvents = async(daysAgo) => {
 
   let results = {left:[], right:[]};
 
-  //only return events that have at lest 3 articles 
+  //only return events that have at lest 4 articles 
   for (const event of events) {
     if (event.Articles.length > 3) {
       let right = event.Articles.filter(article => sourceUris.right.includes(article.Source.uri));

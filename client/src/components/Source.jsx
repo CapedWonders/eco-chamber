@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ArticleList from './ArticleList.jsx';
-var FaCaretLeft = require('react-icons/lib/fa/caret-left');
-var FaCaretRight = require('react-icons/lib/fa/caret-right');
+import FaCaretLeft from 'react-icons/lib/fa/caret-left';
+import FaCaretRight from 'react-icons/lib/fa/caret-right';
 
 
 class Source extends Component {
@@ -14,7 +14,6 @@ class Source extends Component {
     const { image } = this.props.source;
 
     return (
-
       <div className={this.props.show ? "showSource" : "hideSource"}>
         <div className="source-image">       
           <FaCaretLeft onClick={(e) => this.props.toggle(e, 'left')} className="fa-caret-left"/>
@@ -24,7 +23,13 @@ class Source extends Component {
         <div className="source-title">       
           <h2>{title}</h2>
         </div>
-        <ArticleList getRatings={this.props.getRatings} ratings={this.props.ratings} selected={this.props.selected} toggleArticle={this.props.toggleArticle} articles={this.props.articles}/> 
+        <ArticleList 
+          getRatings={this.props.getRatings} 
+          ratings={this.props.ratings} 
+          selected={this.props.selected} 
+          toggleArticle={this.props.toggleArticle} 
+          articles={this.props.articles}
+        /> 
       </div>
     );
   }

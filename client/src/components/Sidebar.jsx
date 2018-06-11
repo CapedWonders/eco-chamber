@@ -9,8 +9,8 @@ class Sidebar extends Component {
     super(props)
   }
 
-  render() {
-    const loggedInComponents = (
+  renderLoggedInLinks = () => {
+    return (
       <div className="sidebar-menu">
         <Collapsible className="menu-events-list" trigger="View News Events">
           <Link onClick={this.props.toggle} className="sidebar-event-item" to="/topEvents">Top Events</Link>
@@ -22,8 +22,10 @@ class Sidebar extends Component {
         <Link onClick={this.props.toggle} className="sidebar-menu-item" to="/about">About</Link>  
       </div>
     );
+  }
 
-    const loggedOutComponents = (
+  renderLoggedOutLinks = () => {
+    return (
       <div className="sidebar-menu">
         <Collapsible className="menu-events-list" trigger="View News Events">
           <Link onClick={this.props.toggle} className="sidebar-event-item" to="/topEvents">Top Events</Link>
@@ -34,12 +36,16 @@ class Sidebar extends Component {
         <Link onClick={this.props.toggle} className="sidebar-menu-item" to="/about">About</Link>       
       </div>
     );
+  }
 
-    const sideNavComponents = Auth.getJWT() ? loggedInComponents : loggedOutComponents;
+  render() {
+    const loggedInLinks = this.renderLoggedInLinks();
+    const loggedOutLinks = this.renderLoggedOutLinks();
+    const sideNavLinks = Auth.getJWT() ? loggedInLinks : loggedOutLinks;
 
     return (
       <div style={{display: this.props.show}} className="sidebar"> 
-        {sideNavComponents}
+        {sideNavLinks}
       </div>
     );
   }

@@ -11,10 +11,9 @@ class Sources extends Component {
       selected: this.props.sources[0],
       selectedIndex: 0
     };
-    this.toggleSelected = this.toggleSelected.bind(this);
   }
 
-  toggleSelected(e, leftOrRight) {
+  toggleSelected = (e, leftOrRight) => {
     e.preventDefault();
     let currentIndex = this.state.selectedIndex;
     let sources = this.state.sources;
@@ -30,19 +29,21 @@ class Sources extends Component {
         this.setState({ selectedIndex: 0, selected: this.props.sources[0] });
       } else {
         this.setState({ selectedIndex: currentIndex + 1, selected: this.props.sources[currentIndex + 1] });
-      }
-      
+      }     
     }
   }
-  render() {
-    
-    const sourcesAll = this.props.sources.map(({ Articles, ...source }) => {
+
+  renderSources = () => {
+    return this.props.sources.map(({ Articles, ...source }) => {
       return (
         <div key={source.id}>
           <Source getRatings={this.props.getRatings} ratings={this.props.ratings} selected={this.props.selected} toggleArticle={this.props.toggleArticle} toggle={this.toggleSelected} articles={Articles} show={this.state.selected.id === source.id ? true: false} source={source}/>       
         </div>
       );
     });
+  }
+  render() { 
+    const sourcesAll = this.renderSources();
   
     return (
       <div className="sources-list">

@@ -7,9 +7,9 @@ import CompareArticles from './CompareArticles.jsx';
 import ArticleDetail from './ArticleDetail.jsx';
 import moment from 'moment';
 import WordMap from './WordMap.jsx';
-var FaClose = require('react-icons/lib/fa/close');
 import analyzeArticleTitles from '../helpers/WordMap.js';
 import Auth from '../helpers/Auth.js';
+import FaClose from 'react-icons/lib/fa/close';
 
 class Event extends Component {
   constructor(props) {
@@ -25,12 +25,6 @@ class Event extends Component {
       selectedArticleforModal: [],
       ratings:[]
     };
-
-    this.toggleSelectedArticle = this.toggleSelectedArticle.bind(this);
-    this.compareArticles = this.compareArticles.bind(this);
-    this.getMatchingSource = this.getMatchingSource.bind(this);
-    this.closeModal = this.closeModal.bind(this);
-    this.clearSelectedArticles = this.clearSelectedArticles.bind(this);
   }
 
   componentDidMount() {
@@ -41,7 +35,6 @@ class Event extends Component {
       this.getWordMapData(this.state.articles);   
       this.getSavedRatings();
     }); 
-
   } 
 
   getSavedRatings = () => {
@@ -51,7 +44,7 @@ class Event extends Component {
     }   
   }
 
-  getAllArticles(allSources) {
+  getAllArticles = (allSources) => {
     let allArticles = [];
     for (const source of allSources) {
       allArticles = allArticles.concat(source.Articles);
@@ -59,12 +52,12 @@ class Event extends Component {
     this.setState({articles: allArticles});
   }
 
-  getWordMapData(articles) {
+  getWordMapData = (articles) => {
     const data = analyzeArticleTitles(articles);
     this.setState({ titleWords: data.words, weightedWords: data.weighted });
   }
 
-  orderSources (allSources) {
+  orderSources = (allSources) => {
     let farLeft = allSources.filter(source => source.bias === -2).sort((a, b) => a.Articles.length < b.Articles.length);
     let left = allSources.filter(source => source.bias === -1).sort((a, b) => a.Articles.length < b.Articles.length);
     let center = allSources.filter(source => source.bias === 0).sort((a, b) => a.Articles.length < b.Articles.length);
@@ -74,7 +67,7 @@ class Event extends Component {
     this.setState({ "orderedSources": [ farLeft, left, center, right, farRight] });
   }
 
-  getMatchingSource(sourceId) {
+  getMatchingSource = (sourceId) => {
     let sources = this.state.orderedSources;
     for (const bias of sources) {
       for (const source of bias) {
@@ -85,7 +78,7 @@ class Event extends Component {
     }  
   }
 
-  toggleSelectedArticle(article) { 
+  toggleSelectedArticle = (article) => { 
 
     let wasSelected = this.state.selectedArticles.filter(x => x.id === article.id);
 
@@ -108,11 +101,11 @@ class Event extends Component {
     }
   }
 
-  clearSelectedArticles() {
+  clearSelectedArticles = () => {
     this.setState({selectedArticles:[]});
   }
 
-  compareArticles(e) {
+  compareArticles = (e) => {
     if (this.state.selectedArticles.length === 2) {
       this.setState({showCompareModal: true});
     }
@@ -127,12 +120,12 @@ class Event extends Component {
     this.setState({selectedArticleforModal: [], showArticleModal: false });
   }
 
-  closeModal() {
+  closeModal = () => {
     this.setState({showCompareModal: false});
   }
 
-  render() {
-    const articleModal = this.state.showArticleModal 
+  renderArticleModal = () => {
+    return this.state.showArticleModal 
       ?  <div className="modal" style={{ display: 'block'}}>
           <div className="modal-content">
             <FaClose style={{"color":"darkgrey", "fontSize": 60}}onClick={this.clearArticleModal}/>
@@ -143,18 +136,21 @@ class Event extends Component {
             />
           </div>
         </div>
-      : <div></div>
+      : <div></div> 
+  }
 
-    const sources = this.state.orderedSources.map(x => {
+  renderSources = () => {
+    return this.state.orderedSources.map(x => {
       return (
         <li key={x[0].bias}>
           <Sources getRatings={this.getSavedRatings} ratings={this.state.ratings} selected={this.state.selectedArticles} toggleArticle={this.toggleSelectedArticle} sources={x}/>
         </li>
       )
     });
+  }
 
-    const compareOne = 
-    this.state.selectedArticles.length > 0
+  renderCompareOne = () => {
+    return this.state.selectedArticles.length > 0
       ? <div id="article-compare-detail-one">
           <div className="article-compare-title">
             <FaClose onClick={()=> this.toggleSelectedArticle(this.state.selectedArticles[0])}/>
@@ -163,9 +159,10 @@ class Event extends Component {
           <button onClick={() => this.setArticleModal(this.state.selectedArticles[0].id)}>Rate Article</button>
         </div>
       : <div></div>
+  }
 
-    const compareTwo = 
-    this.state.selectedArticles.length === 2
+  renderCompareTwo = () => {
+    return this.state.selectedArticles.length === 2
       ? <div id="article-compare-detail-two">
           <div className="article-compare-title">
             <FaClose onClick={()=> this.toggleSelectedArticle(this.state.selectedArticles[1])}/>
@@ -174,19 +171,42 @@ class Event extends Component {
           <button onClick={() => this.setArticleModal(this.state.selectedArticles[1].id)}>Rate Article</button>
         </div>
       : <div></div>
-  
-    const articleDetails = 
-    this.state.selectedArticles.length === 2 
-      ? <CompareArticles clear= {this.clearSelectedArticles} close={this.closeModal} show={this.state.showCompareModal} articles={this.state.selectedArticles}/>
-      : <CompareArticles clear={this.clearSelectedArticles} show={this.state.showCompareModal} articles={[{id: 1, title: '', body: '', sourceImage: '', Sentiments: [] }, {id: 1, title: '', body: '', sourceImage: '', Sentiments: [] }]}/>
+  }
 
-    const compareButton = 
-    this.state.selectedArticles.length === 2 
+  renderArticleDetails = () => {
+    return this.state.selectedArticles.length === 2 
+      ? <CompareArticles 
+          clear= {this.clearSelectedArticles} 
+          close={this.closeModal} 
+          show={this.state.showCompareModal} 
+          articles={this.state.selectedArticles}
+          getRatings={this.getSavedRatings}
+          rated1={this.state.ratings.filter(rating => rating.article.id === this.state.selectedArticles[0].id).length > 0} 
+          rated2={this.state.ratings.filter(rating => rating.article.id === this.state.selectedArticles[1].id).length > 0}
+        />
+      : <CompareArticles 
+          clear={this.clearSelectedArticles} 
+          show={this.state.showCompareModal} 
+          articles={[{id: 1, title: '', body: '', sourceImage: '', Sentiments: [] }, {id: 1, title: '', body: '', sourceImage: '', Sentiments: [] }]}
+        />
+  }
+
+  renderCompareButton = () => {
+    return this.state.selectedArticles.length === 2 
       ?  <div className="compare-bottom">
             <h3 onClick={this.compareArticles}>Compare Articles</h3>
           </div>
       : <div></div>
+  }
 
+  render() {
+    const articleModal = this.renderArticleModal();
+    const sources = this.renderSources();
+    const compareOne = this.renderCompareOne();
+    const compareTwo = this.renderCompareTwo();  
+    const articleDetails = this.renderArticleDetails();
+    const compareButton = this.renderCompareButton();
+    
     return (
       <div>
         {articleModal}

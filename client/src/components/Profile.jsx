@@ -54,27 +54,27 @@ class Profile extends Component {
     return null;
   }
 
+  renderTitleBias = (leftRightOrCenter) => {
+    return this.state[leftRightOrCenter + 'Ratings'].length === 0
+      ? (<div></div>)
+      : (<p>Titles: {this.calculateBias(this.state[leftRightOrCenter + 'Ratings'], 'titleBias')}</p>);
+  }
+
+  renderArticleBias = (leftRightOrCenter) => {
+    return this.state[leftRightOrCenter + 'Ratings'].length === 0
+      ? (<div></div>)
+      : (<p>Articles: {this.calculateBias(this.state[leftRightOrCenter + 'Ratings'], 'articleBias')}</p>);
+
+  }
+
   render() {
-    const leftTitleBias = this.state.leftRatings.length === 0 
-      ? (<div></div>) 
-      : (<p>Titles: {this.calculateBias(this.state.leftRatings, 'titleBias')}</p>);
-    const centerTitleBias = this.state.centerRatings.length === 0 
-      ? (<div></div>) 
-      : (<p>Titles: {this.calculateBias(this.state.centerRatings, 'titleBias')}</p>);
-    const rightTitleBias = this.state.rightRatings.length === 0 
-      ? (<div></div>) 
-      : (<p>Titles: {this.calculateBias(this.state.rightRatings, 'titleBias')}</p>);
+    const leftTitleBias = this.renderTitleBias('left');
+    const centerTitleBias = this.renderTitleBias('center');
+    const rightTitleBias = this.renderTitleBias('right');
 
-    const leftArticleBias = this.state.leftRatings.length === 0 
-      ? (<div></div>) 
-      : (<p>Articles: {this.calculateBias(this.state.leftRatings, 'articleBias')}</p>);
-    const centerArticleBias = this.state.centerRatings.length === 0 
-      ? (<div></div>) 
-      : (<p>Articles: {this.calculateBias(this.state.centerRatings, 'articleBias')}</p>);
-    const rightArticleBias = this.state.rightRatings.length === 0 
-      ? (<div></div>) 
-      : (<p>Articles: {this.calculateBias(this.state.rightRatings, 'articleBias')}</p>);
-
+    const leftArticleBias = this.renderArticleBias('left');
+    const centerArticleBias = this.renderArticleBias('center');
+    const rightArticleBias = this.renderArticleBias('right');
 
     return (
       <div className="profile">

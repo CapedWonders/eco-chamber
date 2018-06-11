@@ -32,8 +32,8 @@ class MyEvents extends Component {
     this.setState({ selected: id});
   }
 
-  render() {
-    const show = this.state.savedEvents.length === 0 
+  renderEvents = () => {
+    return this.state.savedEvents.length === 0 
       ? (<ul className="events-container"><h1>No Saved Events</h1></ul>)
       : (
           <ul className="events-container">
@@ -48,8 +48,11 @@ class MyEvents extends Component {
               />
           </ul>
         );
+  }
 
-    return show;
+  render() {
+    const show = this.renderEvents();
+    return show
   }
 };
 

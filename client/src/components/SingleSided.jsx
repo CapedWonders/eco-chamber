@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import Api from '../helpers/Api';
 import Auth from '../helpers/Auth';
 import EventList from './EventList.jsx';
@@ -56,9 +55,9 @@ class SingleSided extends Component {
     this.setState({bias: e.target.value});
   }
 
-  render() {
+  renderList = () => {
     const biasedEvents = this.state.bias === 'left' ? this.state.leftEvents : this.state.rightEvents;
-    const show = biasedEvents.length === 0 
+    return biasedEvents.length === 0 
       ? (<div className="loading"><div className="loading-spinner"></div></div>)
       : (          
           <EventList
@@ -72,6 +71,10 @@ class SingleSided extends Component {
             events={biasedEvents} 
           />    
         );
+  }
+
+  render() {  
+    const show = this.renderList();
 
     return (
       <ul className="events-container">                 

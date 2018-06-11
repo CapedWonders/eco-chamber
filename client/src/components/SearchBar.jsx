@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-const FaSearch = require('react-icons/lib/fa/search');
+import FaSearch from 'react-icons/lib/fa/search';
 
 class SearchBar extends Component {
   constructor(props) {

@@ -724,6 +724,7 @@ button:hover {
 .fa-caret-left, .fa-caret-right{
   color: #3c3c3d;
   font-size: 4em;
+  cursor: pointer;
 }
 
 .fa-caret-left:hover, .fa-caret-right:hover{

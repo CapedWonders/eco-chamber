@@ -3,11 +3,10 @@ import { BrowserRouter as Router, Route, Link, withRouter } from 'react-router-d
 import moment from 'moment';
 import EventDetail from './EventDetail.jsx';
 import Auth from '../helpers/Auth';
-
-var FaStarO = require('react-icons/lib/fa/star-o');
-var FaStarC = require('react-icons/lib/fa/star');
-var FaLineChart = require('react-icons/lib/fa/line-chart');
-var FaClose = require('react-icons/lib/fa/close');
+import FaStarO from 'react-icons/lib/fa/star-o';
+import FaStarC from 'react-icons/lib/fa/star';
+import FaLineChart from 'react-icons/lib/fa/line-chart';
+import FaClose from 'react-icons/lib/fa/close';
 
 class EventCard extends Component {
   constructor(props) {

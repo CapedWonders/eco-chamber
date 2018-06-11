@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Auth from '../helpers/Auth';
 import SearchBar from './SearchBar.jsx';
-var Bars = require('react-icons/lib/fa/bars');
+import Bars from 'react-icons/lib/fa/bars';
 
 const onClick = () => {
   Auth.deleteJWT();
@@ -13,22 +13,28 @@ class Navbar extends Component {
     super(props);
   }
 
-  render() {
-    const loggedInComponents = (
+  renderLoggedInLinks = () => {
+    return (
       <div className="nav-right">
         <Link to="/user/profile">My Profile</Link>
         <Link to="/" onClick={onClick}>Logout</Link>
       </div>
     );
+  }
 
-    const loggedOutComponents = (
+  renderLoggedOutLinks = () => {
+    return (
       <div className="nav-right">
         <Link to="/signup">Sign Up</Link>  
         <Link to="/signin">Log in</Link>
       </div>
     );
+  }
 
-    const rightNavComponents = Auth.getJWT() ? loggedInComponents : loggedOutComponents;
+  render() {
+    const loggedInLinks = this.renderLoggedInLinks();
+    const loggedOutLinks = this.renderLoggedOutLinks()
+    const rightNavLinks = Auth.getJWT() ? loggedInLinks : loggedOutLinks;
 
     return (
       <div className="navbar"> 
@@ -39,7 +45,7 @@ class Navbar extends Component {
           </Link>
         </div>
         <SearchBar/>
-        {rightNavComponents}
+        {rightNavLinks}
       </div>
     );
   }
