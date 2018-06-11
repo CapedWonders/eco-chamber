@@ -35,17 +35,6 @@ class Gameboard extends Component {
         } 
       }      
     };
-
-    this.setSources = this.setSources.bind(this);
-    this.setEvent = this.setEvent.bind(this);
-    this.setArticles = this.setArticles.bind(this);
-    this.getWordMapData = this.getWordMapData.bind(this);
-    this.newArticle = this.newArticle.bind(this);
-    this.randomizeArticles = this.randomizeArticles.bind(this);
-    this.finishedGame = this.finishedGame.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleChangeArticle = this.handleChangeArticle.bind(this);
-    this.resetScore = this.resetScore.bind(this);
   }
 
  componentDidMount() {
@@ -57,7 +46,7 @@ class Gameboard extends Component {
    }); 
   } 
 
-  newArticle() {
+  newArticle = () => {
     let current = this.state.articleIndex;
     let newIndex = current === this.state.articles.length -1 ? 0 : current + 1;
     if (newIndex === 0) {
@@ -67,11 +56,11 @@ class Gameboard extends Component {
     }  
   }
 
-  finishedGame() {
+  finishedGame = () => {
     this.setState({finished: true});
   }
 
-  setEvent(eventId) {
+  setEvent = (eventId) => {
     let previous = this.state.selectedEvent.id;
     let event = this.state.events.filter(event => event.id === eventId)[0];
    
@@ -83,7 +72,7 @@ class Gameboard extends Component {
     });
   }
 
-  setSources() {
+  setSources = () => {
     let event = this.state.selectedEvent;
     let sources = {
       right: event.Articles.filter(article => article.Source.bias === 1 || article.Source.bias === 2).map(article => article.Source),
@@ -93,12 +82,12 @@ class Gameboard extends Component {
     this.setState({ sources: sources });
   }
   
-  resetScore() {
+  resetScore = () => {
     let score = { left: {correct:0, incorrect:0}, right: {correct:0, incorrect: 0}, center: {correct: 0, incorrect: 0}};
     this.setState({ score, finished: false, correct: null, articleIndex: 0 });
   }
 
-  setArticles(numArticles) {
+  setArticles = (numArticles) => {
     let event = this.state.selectedEvent;
     let articles = this.randomizeArticles(event.Articles);
     if (numArticles !== "all") {
@@ -108,12 +97,12 @@ class Gameboard extends Component {
     this.resetScore();
   }
 
-  getWordMapData(articles) {
+  getWordMapData = (articles) => {
     const data = analyzeArticleTitles(articles);
     this.setState({ titleWords: data.words, weightedWords: data.weighted });
   }
 
-  randomizeArticles(articles) { 
+  randomizeArticles = (articles) => { 
     var currentIndex = articles.length, temporaryValue, randomIndex;
 
     while (0 !== currentIndex) {
@@ -127,7 +116,7 @@ class Gameboard extends Component {
     return articles;
   }
 
-  calculateBias(spectrum) {
+  calculateBias = (spectrum) => {
 
     let sources = {
       left: [-1, -2],
@@ -149,11 +138,11 @@ class Gameboard extends Component {
    
   }
 
-  handleChange(event) {
+  handleChange = (event) => {
     this.setState({currentEventId: event.target.value}, () => this.setEvent(parseInt(this.state.currentEventId)));
   }
 
-  handleChangeArticle(event) {
+  handleChangeArticle = (event) => {
     this.setArticles(event.target.value);  
   }
 
